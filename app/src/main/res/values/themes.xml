@@ -5,6 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="Theme.Cartoon_Four_Cut" parent="Base.Theme.Cartoon_Four_Cut" />

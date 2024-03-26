@@ -3,41 +3,50 @@ package com.woojun.cartoon_four_cut
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.woojun.cartoon_four_cut.databinding.ActivitySplashBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
+    private lateinit var logoList: List<Pair<ObjectAnimator, Long>>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val fadeIn = ObjectAnimator.ofFloat(binding.logo1, "alpha", 0f, 1f)
-            fadeIn.duration = 500
-            fadeIn.start()
-        }, 500)
+        logoList = listOf(
+            Pair(createFadeInAnimation(binding.logo1), 300),
+            Pair(createFadeInAnimation(binding.logo2), 400),
+            Pair(createFadeInAnimation(binding.logo3), 500),
+            Pair(createFadeInAnimation(binding.logo4), 600)
+        )
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val fadeIn = ObjectAnimator.ofFloat(binding.logo2, "alpha", 0f, 1f)
-            fadeIn.duration = 500
-            fadeIn.start()
-        }, 1000)
+        CoroutineScope(Dispatchers.Main).launch {
+            animateLogos()
+            delay(200)
+        }
+    }
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val fadeIn = ObjectAnimator.ofFloat(binding.logo3, "alpha", 0f, 1f)
-            fadeIn.duration = 500
-            fadeIn.start()
-        }, 1500)
+    private fun createFadeInAnimation(target: ImageView): ObjectAnimator {
+        val fadeIn = ObjectAnimator.ofFloat(target, "alpha", 0f, 1f)
+        fadeIn.duration = 200
+        return fadeIn
+    }
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val fadeIn = ObjectAnimator.ofFloat(binding.logo4, "alpha", 0f, 1f)
-            fadeIn.duration = 500
-            fadeIn.start()
-        }, 2000)
+    private suspend fun animateLogos() {
+        withContext(Dispatchers.Main) {
+            logoList.forEach { (animation, delay) ->
+                delay(delay)
+                animation.start()
+            }
+        }
     }
 }

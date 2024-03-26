@@ -7,4 +7,41 @@
     android:background="@color/white"
     tools:context=".SplashActivity">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/logo1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_1" />
+
+        <ImageView
+            android:id="@+id/logo2"
+            android:layout_marginStart="4.82dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_2" />
+
+        <ImageView
+            android:id="@+id/logo3"
+            android:layout_marginStart="6.51dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_3" />
+
+        <ImageView
+            android:id="@+id/logo4"
+            android:layout_marginStart="9.1dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_4" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

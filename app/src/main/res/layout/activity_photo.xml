@@ -8,6 +8,7 @@
     tools:context=".PhotoActivity">
 
     <LinearLayout
+        android:layout_marginTop="16dp"
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
@@ -16,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="14dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_icon" />
@@ -76,6 +77,7 @@
                 app:strokeColor="@color/gray_30">
 
                 <LinearLayout
+                    android:id="@+id/default_image1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -97,6 +99,11 @@
                         android:textSize="14sp" />
 
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -113,6 +120,7 @@
                 app:strokeColor="@color/gray_30">
 
                 <LinearLayout
+                    android:id="@+id/default_image2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -134,6 +142,11 @@
                         android:textSize="14sp" />
 
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -150,6 +163,7 @@
                 app:strokeColor="@color/gray_30">
 
                 <LinearLayout
+                    android:id="@+id/default_image3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -171,6 +185,11 @@
                         android:textSize="14sp" />
 
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -188,6 +207,7 @@
                 app:strokeColor="@color/gray_30">
 
                 <LinearLayout
+                    android:id="@+id/default_image4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -209,6 +229,11 @@
                         android:textSize="14sp" />
 
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </com.google.android.material.card.MaterialCardView>
 

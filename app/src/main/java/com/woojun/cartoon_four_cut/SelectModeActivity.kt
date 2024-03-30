@@ -19,5 +19,9 @@ class SelectModeActivity : AppCompatActivity() {
         binding.galleryButton.setOnClickListener {
             startActivity(Intent(this@SelectModeActivity, PhotoActivity::class.java))
         }
+
+        binding.backButton.setOnClickListener {
+            finish()
+        }
     }
 }

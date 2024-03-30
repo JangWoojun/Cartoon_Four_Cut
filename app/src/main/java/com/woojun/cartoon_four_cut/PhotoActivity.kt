@@ -77,5 +77,10 @@ class PhotoActivity : AppCompatActivity() {
         binding.selectButton.setOnClickListener {
 
         }
+
+
+        binding.backButton.setOnClickListener {
+            finish()
+        }
     }
 }

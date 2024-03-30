@@ -1,10 +1,8 @@
-package com.woojun
+package com.woojun.cartoon_four_cut
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.woojun.cartoon_four_cut.CameraActivity
-import com.woojun.cartoon_four_cut.PhotoActivity
 import com.woojun.cartoon_four_cut.databinding.ActivitySelectModeBinding
 
 class SelectModeActivity : AppCompatActivity() {

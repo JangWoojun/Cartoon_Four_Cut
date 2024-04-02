@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/pink"
         app:cardCornerRadius="100dp"
+        android:outlineProvider="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

@@ -63,6 +63,7 @@ class CameraActivity : AppCompatActivity() {
                         }
                     }
                 }
+                binding.captureButton.isEnabled = true
             }
             override fun onPictureShutter() {
             }
@@ -73,7 +74,7 @@ class CameraActivity : AppCompatActivity() {
         }
 
         binding.captureButton.setOnClickListener {
-            binding.cameraView.takePicture()
+            it.isEnabled = false
         }
 
         binding.flashButton.setOnClickListener {

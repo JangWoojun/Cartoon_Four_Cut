@@ -3,26 +3,20 @@ package com.woojun.cartoon_four_cut
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Rect
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.controls.Flash
-import com.otaliastudios.cameraview.controls.Mode
 import com.woojun.cartoon_four_cut.Utils.dpToPx
 import com.woojun.cartoon_four_cut.databinding.ActivityCameraBinding
-import java.io.FileOutputStream
 
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
 
     private var flashToggle = false
-    private var captureCount = 1
-
-    private val imageList = mutableListOf<Pair<String, Bitmap>>()
+    private var imageCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,36 +24,26 @@ class CameraActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.cameraView.setLifecycleOwner(this)
-        binding.cameraView.mode = Mode.PICTURE
         binding.cameraView.addCameraListener(object : CameraListener() {
 
             override fun onPictureTaken(result: PictureResult) {
                 result.toBitmap { bitmap ->
                     if (bitmap != null) {
-                        captureCount++
-                        binding.countText.text = "${captureCount}/4"
+                        imageCount++
+                        binding.countText.text = "${imageCount}/4"
+                        binding.cameraView.post {
+                            val image = cropBitmap(this@CameraActivity, bitmap)
 
-                        imageList.add(Pair("${System.currentTimeMillis()}.png", cropBitmap(baseContext, bitmap)))
-
-                        if (imageList.size == 4) {
-                            val intent = Intent(this@CameraActivity, FilterActivity::class.java)
-
-                            imageList.forEach {
-                                val (filename, bmp) = it
-
-                                try {
-                                    val stream: FileOutputStream = openFileOutput(filename, MODE_PRIVATE)
-                                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
-                                    stream.close()
-                                    bmp.recycle()
-
-                                    intent.putExtra("images", filename)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
+                            when(imageCount) {
+                                1 -> BitmapData.setImage1(image)
+                                2 -> BitmapData.setImage2(image)
+                                3 -> BitmapData.setImage3(image)
+                                4 -> {
+                                    BitmapData.setImage4(image)
+                                    startActivity(Intent(this@CameraActivity, FilterActivity::class.java))
+                                    finish()
                                 }
                             }
-                            startActivity(intent)
                         }
                     }
                 }

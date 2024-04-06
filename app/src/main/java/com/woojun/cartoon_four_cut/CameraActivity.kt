@@ -1,26 +1,29 @@
 package com.woojun.cartoon_four_cut
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Canvas
+import android.graphics.Rect
 import android.os.Bundle
-import android.os.Environment
+import androidx.appcompat.app.AppCompatActivity
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.PictureResult
-import com.otaliastudios.cameraview.VideoResult
 import com.otaliastudios.cameraview.controls.Flash
 import com.otaliastudios.cameraview.controls.Mode
+import com.woojun.cartoon_four_cut.Utils.dpToPx
 import com.woojun.cartoon_four_cut.databinding.ActivityCameraBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
+
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
+
     private var flashToggle = false
+    private var captureCount = 1
+
+    private val imageList = mutableListOf<Pair<String, Bitmap>>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
@@ -29,46 +32,39 @@ class CameraActivity : AppCompatActivity() {
         binding.cameraView.setLifecycleOwner(this)
         binding.cameraView.mode = Mode.PICTURE
         binding.cameraView.addCameraListener(object : CameraListener() {
-            // 사진 촬영 결과 리스너
+
             override fun onPictureTaken(result: PictureResult) {
                 result.toBitmap { bitmap ->
                     if (bitmap != null) {
+                        captureCount++
+                        binding.countText.text = "${captureCount}/4"
 
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val file = File(
-                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                "카툰 네컷${System.currentTimeMillis()}.jpg"
-                            )
+                        imageList.add(Pair("${System.currentTimeMillis()}.png", cropBitmap(baseContext, bitmap)))
 
-                            try {
-                                withContext(Dispatchers.IO) {
-                                    val fileOutputStream = FileOutputStream(file)
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-                                    fileOutputStream.close()
+                        if (imageList.size == 4) {
+                            val intent = Intent(this@CameraActivity, FilterActivity::class.java)
+
+                            imageList.forEach {
+                                val (filename, bmp) = it
+
+                                try {
+                                    val stream: FileOutputStream = openFileOutput(filename, MODE_PRIVATE)
+                                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
+
+                                    stream.close()
+                                    bmp.recycle()
+
+                                    intent.putExtra("images", filename)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
                                 }
-
-                            } catch (e: IOException) {
-                                e.printStackTrace()
                             }
+                            startActivity(intent)
                         }
                     }
                 }
             }
-
-            override fun onVideoTaken(result: VideoResult) {
-                result.file.apply {
-                    // 동영상 파일 사용
-                }
-            }
-
-            override fun onVideoRecordingEnd() {
-                super.onVideoRecordingEnd()
-            }
-
             override fun onPictureShutter() {
-            }
-
-            override fun onVideoRecordingStart() {
             }
         })
 
@@ -89,6 +85,19 @@ class CameraActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun cropBitmap(context: Context, bitmap: Bitmap): Bitmap {
+        val bitmapWidth = bitmap.width
+        val startY = context.dpToPx(146.5f)
+
+        val cropRect = Rect(0, startY.toInt(), bitmapWidth, (startY + bitmapWidth).toInt())
+
+        val croppedBitmap = Bitmap.createBitmap(bitmapWidth, bitmapWidth, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(croppedBitmap)
+        canvas.drawBitmap(bitmap, cropRect, Rect(0, 0, bitmapWidth, bitmapWidth), null)
+
+        return croppedBitmap
     }
 
 }

@@ -89,15 +89,9 @@ class CameraActivity : AppCompatActivity() {
 
     fun cropBitmap(context: Context, bitmap: Bitmap): Bitmap {
         val bitmapWidth = bitmap.width
-        val startY = context.dpToPx(146.5f)
+        val startY = context.dpToPx(146.5f).toInt()
 
-        val cropRect = Rect(0, startY.toInt(), bitmapWidth, (startY + bitmapWidth).toInt())
-
-        val croppedBitmap = Bitmap.createBitmap(bitmapWidth, bitmapWidth, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(croppedBitmap)
-        canvas.drawBitmap(bitmap, cropRect, Rect(0, 0, bitmapWidth, bitmapWidth), null)
-
-        return croppedBitmap
+        return Bitmap.createBitmap(bitmap, 0, startY, bitmapWidth, bitmapWidth)
     }
 
 }

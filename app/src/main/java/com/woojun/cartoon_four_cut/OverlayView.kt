@@ -7,6 +7,7 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.woojun.cartoon_four_cut.Utils.dpToPx
 
 class OverlayView @JvmOverloads constructor(
     context: Context,
@@ -30,9 +31,11 @@ class OverlayView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        val topMarginInPx = context.dpToPx(146.5f)
+
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
 
-        rect.set(0f, height / 4f, width.toFloat(), height * 3f / 4)
+        rect.set(0f, topMarginInPx , width.toFloat(),  topMarginInPx + width)
 
         path.reset()
         path.addRoundRect(rect, cornerRadius, cornerRadius, Path.Direction.CCW)

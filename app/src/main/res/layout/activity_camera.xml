@@ -30,14 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="#80000000"
+        <com.woojun.cartoon_four_cut.HoleView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent" />
 
     </com.otaliastudios.cameraview.CameraView>
 

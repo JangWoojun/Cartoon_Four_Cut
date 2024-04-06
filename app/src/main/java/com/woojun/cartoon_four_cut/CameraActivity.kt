@@ -75,6 +75,9 @@ class CameraActivity : AppCompatActivity() {
 
         binding.captureButton.setOnClickListener {
             it.isEnabled = false
+            binding.pulseCountDown.start {
+                binding.cameraView.takePicture()
+            }
         }
 
         binding.flashButton.setOnClickListener {

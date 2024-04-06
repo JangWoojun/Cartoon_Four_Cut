@@ -30,9 +30,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.woojun.cartoon_four_cut.OverlayView
+        <com.woojun.cartoon_four_cut.custom_view.overlay_view.OverlayView
+            android:id="@+id/overlay_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <com.woojun.cartoon_four_cut.custom_view.pulse_count_down.PulseCountDown
+            android:layout_gravity="center"
+            android:layout_marginBottom="60dp"
+            android:id="@+id/pulse_count_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:fontFamily="@font/s_medium"
+            app:pc_endValue="0"
+            android:textSize="128sp"
+            app:pc_startValue="3" />
 
     </com.otaliastudios.cameraview.CameraView>
 
@@ -42,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:fontFamily="@font/s_medium"
-        android:text="1/4"
+        android:text="0/4"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/capture_button"

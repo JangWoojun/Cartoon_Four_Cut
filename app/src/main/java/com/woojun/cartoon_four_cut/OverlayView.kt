@@ -20,9 +20,10 @@ class OverlayView @JvmOverloads constructor(
 
     private val holePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0x80000000.toInt()
-        xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.CLEAR) // 구멍 뚫기 효과
+        xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.CLEAR)
     }
 
+    private val rect = RectF()
     private val path = Path()
     private val cornerRadius = 50f
 
@@ -31,8 +32,11 @@ class OverlayView @JvmOverloads constructor(
 
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
 
-        val rect = RectF(0f, height / 4f, width.toFloat(), height * 3f / 4)
+        rect.set(0f, height / 4f, width.toFloat(), height * 3f / 4)
+
+        path.reset()
         path.addRoundRect(rect, cornerRadius, cornerRadius, Path.Direction.CCW)
+
         canvas.drawPath(path, holePaint)
     }
 }

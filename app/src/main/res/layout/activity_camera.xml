@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.woojun.cartoon_four_cut.HoleView
+        <com.woojun.cartoon_four_cut.OverlayView
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

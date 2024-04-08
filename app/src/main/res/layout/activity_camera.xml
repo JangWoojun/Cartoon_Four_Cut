@@ -64,9 +64,9 @@
 
     <ImageView
         android:id="@+id/flash_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/flash_on_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/flash_off_icon"
         app:layout_constraintBottom_toBottomOf="@+id/capture_button"
         app:layout_constraintEnd_toStartOf="@+id/capture_button"
         app:layout_constraintStart_toStartOf="parent"

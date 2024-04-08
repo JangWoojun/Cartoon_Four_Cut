@@ -129,7 +129,19 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-
+    <TextView
+        android:id="@+id/filter_text"
+        android:gravity="center_vertical"
+        android:textColor="@color/gray_90"
+        android:textSize="16sp"
+        android:fontFamily="@font/s_semibold"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:text="필터 X"
+        app:layout_constraintEnd_toEndOf="@+id/main_frame"
+        app:layout_constraintStart_toStartOf="@+id/main_frame"
+        app:layout_constraintTop_toBottomOf="@+id/main_frame" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

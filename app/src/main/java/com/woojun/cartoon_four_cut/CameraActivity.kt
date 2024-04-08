@@ -15,7 +15,7 @@ import com.woojun.cartoon_four_cut.databinding.ActivityCameraBinding
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
 
-    private var flashToggle = false
+    private var isFlash = false
     private var imageCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,14 +65,15 @@ class CameraActivity : AppCompatActivity() {
         }
 
         binding.flashButton.setOnClickListener {
-            flashToggle = !flashToggle
-            if (flashToggle) {
-                binding.cameraView.flash = Flash.ON
+            isFlash = !isFlash
+            if (isFlash) {
+                binding.flashButton.setImageResource(R.drawable.flash_on_icon)
+                binding.cameraView.flash = Flash.TORCH
             } else {
+                binding.flashButton.setImageResource(R.drawable.flash_off_icon)
                 binding.cameraView.flash = Flash.OFF
             }
         }
-
     }
 
     fun cropBitmap(context: Context, bitmap: Bitmap): Bitmap {

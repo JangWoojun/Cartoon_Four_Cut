@@ -3,7 +3,6 @@ package com.woojun.cartoon_four_cut
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.woojun.SelectModeActivity
 import com.woojun.cartoon_four_cut.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

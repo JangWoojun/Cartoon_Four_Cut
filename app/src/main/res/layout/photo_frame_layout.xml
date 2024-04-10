@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/main_frame"
+
+    <TextView
+        android:gravity="center_vertical"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:lineHeight="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:fontFamily="@font/s_semibold"
+        android:text="옆으로 넘기며\n필터를 선택해주세요"
+        android:textColor="@color/gray_100"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/main_frame"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
         app:cardBackgroundColor="@color/gray_20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
         app:strokeColor="@color/gray_30">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +53,6 @@
                 android:id="@+id/image_frame_1"
                 android:layout_width="151dp"
                 android:layout_height="151dp"
-                android:layout_marginEnd="6dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="4dp"
                 app:layout_constraintEnd_toStartOf="@id/line"
@@ -55,7 +72,6 @@
                 android:layout_width="151dp"
                 android:layout_height="151dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="6dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="4dp"
                 app:layout_constraintEnd_toStartOf="@id/line"
@@ -74,7 +90,6 @@
                 android:id="@+id/image_frame_3"
                 android:layout_width="151dp"
                 android:layout_height="151dp"
-                android:layout_marginStart="6dp"
                 android:layout_marginTop="66dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="4dp"
@@ -94,7 +109,6 @@
                 android:id="@+id/image_frame_4"
                 android:layout_width="151dp"
                 android:layout_height="151dp"
-                android:layout_marginStart="6dp"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="4dp"
@@ -116,7 +130,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:id="@+id/type_text"
+        android:id="@+id/filter_text"
         android:gravity="center_vertical"
         android:textColor="@color/gray_90"
         android:textSize="16sp"

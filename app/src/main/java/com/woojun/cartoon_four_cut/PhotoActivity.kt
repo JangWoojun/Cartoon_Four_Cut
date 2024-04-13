@@ -33,7 +33,6 @@ class PhotoActivity : AppCompatActivity() {
                         Glide.with(this@PhotoActivity)
                             .load(it)
                             .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.image1)
                         imageList.add(Pair(selectFrame, uri))
                     }
@@ -41,7 +40,6 @@ class PhotoActivity : AppCompatActivity() {
                         Glide.with(this@PhotoActivity)
                             .load(it)
                             .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.image2)
                         imageList.add(Pair(selectFrame, uri))
                     }
@@ -49,7 +47,6 @@ class PhotoActivity : AppCompatActivity() {
                         Glide.with(this@PhotoActivity)
                             .load(it)
                             .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.image3)
                         imageList.add(Pair(selectFrame, uri))
                     }
@@ -57,7 +54,6 @@ class PhotoActivity : AppCompatActivity() {
                         Glide.with(this@PhotoActivity)
                             .load(it)
                             .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.image4)
                         imageList.add(Pair(selectFrame, uri))
                     }

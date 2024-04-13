@@ -9,7 +9,7 @@ object BitmapData {
     private var image4: Bitmap? = null
 
     fun getImage1(): Bitmap? {
-        return image1
+        return image1?.copy(Bitmap.Config.RGBA_F16, true)
     }
 
     fun setImage1(bitmap: Bitmap) {
@@ -17,7 +17,7 @@ object BitmapData {
     }
 
     fun getImage2(): Bitmap? {
-        return image2
+        return image2?.copy(Bitmap.Config.RGBA_F16, true)
     }
 
     fun setImage2(bitmap: Bitmap) {
@@ -25,7 +25,7 @@ object BitmapData {
     }
 
     fun getImage3(): Bitmap? {
-        return image3
+        return image3?.copy(Bitmap.Config.RGBA_F16, true)
     }
 
     fun setImage3(bitmap: Bitmap) {
@@ -33,7 +33,7 @@ object BitmapData {
     }
 
     fun getImage4(): Bitmap? {
-        return image4
+        return image4?.copy(Bitmap.Config.RGBA_F16, true)
     }
 
     fun setImage4(bitmap: Bitmap) {

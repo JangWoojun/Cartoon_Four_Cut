@@ -137,8 +137,25 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/download_button"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            app:layout_constraintEnd_toStartOf="@+id/delete_button"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:tint="@color/gray_60"
+                android:src="@drawable/download_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/delete_button"
-            android:layout_width="48dp"
+            android:layout_width="44dp"
             android:layout_height="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -149,7 +166,7 @@
                 android:src="@drawable/delete_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/pink" />
+                app:tint="@color/gray_60" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

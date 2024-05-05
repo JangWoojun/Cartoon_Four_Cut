@@ -9,8 +9,15 @@ import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import com.woojun.cartoon_four_cut.BitmapData.getImage1
+import com.woojun.cartoon_four_cut.BitmapData.getImage2
+import com.woojun.cartoon_four_cut.BitmapData.getImage3
+import com.woojun.cartoon_four_cut.BitmapData.getImage4
 import com.woojun.cartoon_four_cut.databinding.ActivityDownloadBinding
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -22,10 +29,34 @@ class DownloadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDownloadBinding.inflate(layoutInflater)
+        overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
         setContentView(binding.root)
 
+        val layout = intent.getIntExtra("layout", 0)
+
+        val inflater = layoutInflater
+        val layoutItem = inflater.inflate(layout, null, false)
+
+        binding.includedLayout.addView(layoutItem)
+
+        val textView = layoutItem.findViewById<TextView>(R.id.filter_text)
+        textView.visibility = View.GONE
+
+        val image1 = layoutItem.findViewById<ImageView>(R.id.image1)
+        image1.setImageBitmap(getImage1())
+
+        val image2 = layoutItem.findViewById<ImageView>(R.id.image2)
+        image2.setImageBitmap(getImage2())
+
+        val image3 = layoutItem.findViewById<ImageView>(R.id.image3)
+        image3.setImageBitmap(getImage3())
+
+        val image4 = layoutItem.findViewById<ImageView>(R.id.image4)
+        image4.setImageBitmap(getImage4())
+
         binding.downloadButton.setOnClickListener {
-            val bitmap: Bitmap = viewToImage(binding.mainFrame)
+            val mainFrame = layoutItem.findViewById<CardView>(R.id.main_frame)
+            val bitmap = viewToImage(mainFrame)
             saveImageOnAboveAndroidQ(bitmap)
         }
 
@@ -33,6 +64,12 @@ class DownloadActivity : AppCompatActivity() {
             startActivity(Intent(this@DownloadActivity, MainActivity::class.java))
             finishAffinity()
         }
+
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.anim_slide_in_from_left_fade_in, R.anim.anim_fade_out)
     }
 
     private fun saveImageOnAboveAndroidQ(bitmap: Bitmap) {

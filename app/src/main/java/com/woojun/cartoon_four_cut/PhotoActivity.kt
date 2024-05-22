@@ -10,7 +10,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.woojun.cartoon_four_cut.databinding.ActivityPhotoBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -102,6 +101,7 @@ class PhotoActivity : AppCompatActivity() {
                         }
                     }
                     withContext(Dispatchers.Main) {
+                        overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
                         startActivity(Intent(this@PhotoActivity, FilterActivity::class.java))
                     }
                 }

@@ -4,13 +4,22 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.woojun.cartoon_four_cut.database.Preferences.loadId
+import com.woojun.cartoon_four_cut.database.Preferences.saveId
+import com.woojun.cartoon_four_cut.data.AuthResponse
 import com.woojun.cartoon_four_cut.databinding.ActivitySplashBinding
+import com.woojun.cartoon_four_cut.network.RetrofitAPI
+import com.woojun.cartoon_four_cut.network.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class SplashActivity : AppCompatActivity() {
@@ -30,9 +39,44 @@ class SplashActivity : AppCompatActivity() {
         )
 
         CoroutineScope(Dispatchers.Main).launch {
+            val authId = loadId(this@SplashActivity)
+            if (authId == null) {
+                val isSuccessful = getAuthId { saveId(this@SplashActivity, it) }
+                if (!isSuccessful) {
+                    Toast.makeText(this@SplashActivity, "초기 세팅을 실패하였습니다", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+            }
             animateLogos()
-            delay(200)
+            startMainActivity()
         }
+
+    }
+
+    private fun startMainActivity() {
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        finishAffinity()
+    }
+
+    private fun getAuthId(callback: (String) -> Unit): Boolean {
+        val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
+        val call: Call<AuthResponse> = retrofitAPI.getAuthId()
+
+        var isSuccessful = false
+
+        call.enqueue(object : Callback<AuthResponse> {
+            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+                if (response.isSuccessful) {
+                    callback(response.body()!!.id)
+                    isSuccessful = true
+                }
+            }
+
+            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+            }
+        })
+
+        return isSuccessful
     }
 
     private fun createFadeInAnimation(target: ImageView): ObjectAnimator {
@@ -47,6 +91,7 @@ class SplashActivity : AppCompatActivity() {
                 delay(delay)
                 animation.start()
             }
+            delay(200)
         }
     }
 }

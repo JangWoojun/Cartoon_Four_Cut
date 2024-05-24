@@ -4,5 +4,6 @@ import android.graphics.Bitmap
 
 data class FilterItem (
     val name: String,
-    val images: MutableList<Bitmap>
+    val images: MutableList<Bitmap>,
+    val isAi: Boolean = false
 )

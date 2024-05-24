@@ -1,4 +1,4 @@
-package com.woojun.cartoon_four_cut
+package com.woojun.cartoon_four_cut.data
 
 import android.graphics.Bitmap
 

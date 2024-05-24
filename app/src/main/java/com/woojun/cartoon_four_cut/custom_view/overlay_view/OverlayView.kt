@@ -7,7 +7,7 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import com.woojun.cartoon_four_cut.Utils.dpToPx
+import com.woojun.cartoon_four_cut.util.Utils.dpToPx
 
 class OverlayView @JvmOverloads constructor(
     context: Context,

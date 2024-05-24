@@ -14,10 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import com.woojun.cartoon_four_cut.BitmapData.getImage1
-import com.woojun.cartoon_four_cut.BitmapData.getImage2
-import com.woojun.cartoon_four_cut.BitmapData.getImage3
-import com.woojun.cartoon_four_cut.BitmapData.getImage4
+import com.woojun.cartoon_four_cut.database.BitmapData.getImage1
+import com.woojun.cartoon_four_cut.database.BitmapData.getImage2
+import com.woojun.cartoon_four_cut.database.BitmapData.getImage3
+import com.woojun.cartoon_four_cut.database.BitmapData.getImage4
 import com.woojun.cartoon_four_cut.databinding.ActivityDownloadBinding
 import java.io.FileNotFoundException
 import java.io.FileOutputStream

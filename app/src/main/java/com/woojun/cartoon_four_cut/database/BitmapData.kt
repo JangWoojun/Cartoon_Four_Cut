@@ -1,4 +1,4 @@
-package com.woojun.cartoon_four_cut
+package com.woojun.cartoon_four_cut.database
 
 import android.graphics.Bitmap
 
@@ -13,7 +13,7 @@ object BitmapData {
     }
 
     fun setImage1(bitmap: Bitmap) {
-        this.image1 = bitmap
+        image1 = bitmap
     }
 
     fun getImage2(): Bitmap? {
@@ -21,7 +21,7 @@ object BitmapData {
     }
 
     fun setImage2(bitmap: Bitmap) {
-        this.image2 = bitmap
+        image2 = bitmap
     }
 
     fun getImage3(): Bitmap? {
@@ -29,7 +29,7 @@ object BitmapData {
     }
 
     fun setImage3(bitmap: Bitmap) {
-        this.image3 = bitmap
+        image3 = bitmap
     }
 
     fun getImage4(): Bitmap? {
@@ -37,6 +37,6 @@ object BitmapData {
     }
 
     fun setImage4(bitmap: Bitmap) {
-        this.image4 = bitmap
+        image4 = bitmap
     }
 }

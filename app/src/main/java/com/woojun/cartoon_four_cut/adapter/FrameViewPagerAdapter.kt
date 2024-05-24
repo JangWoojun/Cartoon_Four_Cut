@@ -1,11 +1,12 @@
-package com.woojun.cartoon_four_cut
+package com.woojun.cartoon_four_cut.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.woojun.cartoon_four_cut.Utils.dpToPx
+import com.woojun.cartoon_four_cut.util.Utils.dpToPx
+import com.woojun.cartoon_four_cut.data.FrameItem
 import com.woojun.cartoon_four_cut.databinding.PhotoFrameLayoutBinding
 
 class FrameViewPagerAdapter(private val frameItemList: MutableList<FrameItem>) : RecyclerView.Adapter<FrameViewPagerAdapter.ViewPagerHolder>()  {

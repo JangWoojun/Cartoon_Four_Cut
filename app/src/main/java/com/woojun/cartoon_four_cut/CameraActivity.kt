@@ -8,7 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.controls.Flash
-import com.woojun.cartoon_four_cut.Utils.dpToPx
+import com.woojun.cartoon_four_cut.util.Utils.dpToPx
+import com.woojun.cartoon_four_cut.database.BitmapData
 import com.woojun.cartoon_four_cut.databinding.ActivityCameraBinding
 
 

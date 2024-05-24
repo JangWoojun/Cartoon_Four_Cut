@@ -1,4 +1,4 @@
-package com.woojun.cartoon_four_cut
+package com.woojun.cartoon_four_cut.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,8 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.woojun.cartoon_four_cut.Utils.dpToPx
+import com.woojun.cartoon_four_cut.util.Utils.dpToPx
+import com.woojun.cartoon_four_cut.data.FilterItem
 import com.woojun.cartoon_four_cut.databinding.PhotoFrameLayoutBinding
 import jp.wasabeef.glide.transformations.BlurTransformation
 

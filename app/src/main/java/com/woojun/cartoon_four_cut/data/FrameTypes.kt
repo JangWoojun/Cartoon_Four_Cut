@@ -1,4 +1,4 @@
-package com.woojun.cartoon_four_cut
+package com.woojun.cartoon_four_cut.data
 
 enum class FrameTypes (frameName: String) {
     None("프레임 X"),

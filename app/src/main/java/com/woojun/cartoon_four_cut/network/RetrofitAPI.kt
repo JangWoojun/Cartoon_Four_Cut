@@ -7,6 +7,7 @@ import com.woojun.cartoon_four_cut.data.UploadRequest
 import com.woojun.cartoon_four_cut.data.UploadResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -17,16 +18,16 @@ import retrofit2.http.Part
 
 interface RetrofitAPI {
     @GET("${BuildConfig.baseUrl}auth")
-    fun getAuthId(): Call<AuthResponse>
+    suspend fun getAuthId(): Response<AuthResponse>
 
     @GET("${BuildConfig.baseUrl}frame")
-    fun getFrame(): Call<FrameResponse>
+    suspend fun getFrame(): Response<List<FrameResponse>>
 
     @Multipart
     @POST("${BuildConfig.baseUrl}upload")
     fun postUpload(
         @Header("Header") header: UploadRequest,
-        @Part body: MultipartBody.Part,
+        @Part body: List<MultipartBody.Part>,
     ): Call<UploadResponse>
 
     @GET("${BuildConfig.baseUrl}filter")

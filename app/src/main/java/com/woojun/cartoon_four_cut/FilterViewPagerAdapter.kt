@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.woojun.cartoon_four_cut.Utils.dpToPx
 import com.woojun.cartoon_four_cut.databinding.PhotoFrameLayoutBinding
+import jp.wasabeef.glide.transformations.BlurTransformation
 
-class FilterViewPagerAdapter(private val filterItemList: MutableList<FilterItem>) : RecyclerView.Adapter<FilterViewPagerAdapter.ViewPagerHolder>() {
+class FilterViewPagerAdapter(private val filterItemList: List<FilterItem>) : RecyclerView.Adapter<FilterViewPagerAdapter.ViewPagerHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerHolder {
         val binding = PhotoFrameLayoutBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -36,27 +38,56 @@ class FilterViewPagerAdapter(private val filterItemList: MutableList<FilterItem>
                 marginEnd = binding.root.context.dpToPx(24f).toInt()
             }
 
-            binding.filterText.text = filterItem.name
 
-            Glide.with(binding.root.context)
-                .load(filterItem.images[0])
-                .centerCrop()
-                .into(binding.image1)
+            if (filterItem.isAi) {
+                binding.filterText.text = "A.I 필터 O - ${filterItem.name}"
 
-            Glide.with(binding.root.context)
-                .load(filterItem.images[1])
-                .centerCrop()
-                .into(binding.image2)
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[0])
+                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
+                    .centerCrop()
+                    .into(binding.image1)
 
-            Glide.with(binding.root.context)
-                .load(filterItem.images[2])
-                .centerCrop()
-                .into(binding.image3)
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[1])
+                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
+                    .centerCrop()
+                    .into(binding.image2)
 
-            Glide.with(binding.root.context)
-                .load(filterItem.images[3])
-                .centerCrop()
-                .into(binding.image4)
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[2])
+                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
+                    .centerCrop()
+                    .into(binding.image3)
+
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[3])
+                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
+                    .centerCrop()
+                    .into(binding.image4)
+            } else {
+                binding.filterText.text = "${filterItem.name}"
+
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[0])
+                    .centerCrop()
+                    .into(binding.image1)
+
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[1])
+                    .centerCrop()
+                    .into(binding.image2)
+
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[2])
+                    .centerCrop()
+                    .into(binding.image3)
+
+                Glide.with(binding.root.context)
+                    .load(filterItem.images[3])
+                    .centerCrop()
+                    .into(binding.image4)
+            }
         }
     }
 

@@ -29,4 +29,7 @@ interface RetrofitAPI {
         @Part body: MultipartBody.Part,
     ): Call<UploadResponse>
 
+    @GET("${BuildConfig.baseUrl}filter")
+    fun getFilter(): Call<List<String>>
+
 }

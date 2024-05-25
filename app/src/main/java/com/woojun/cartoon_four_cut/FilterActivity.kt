@@ -115,15 +115,27 @@ class FilterActivity : AppCompatActivity() {
         getFilter { aiFilterList ->
             callback(List(filterList.size + aiFilterList.size) { i ->
                 if (i < filterList.size) {
-                    FilterItem(
-                        filterNameList[i],
-                        mutableListOf(
-                            filterList[i]!!.processFilter(getImage1()),
-                            filterList[i]!!.processFilter(getImage2()),
-                            filterList[i]!!.processFilter(getImage3()),
-                            filterList[i]!!.processFilter(getImage4()),
+                    if (i != 0) {
+                        FilterItem(
+                            filterNameList[i],
+                            mutableListOf(
+                                filterList[i]!!.processFilter(getImage1()),
+                                filterList[i]!!.processFilter(getImage2()),
+                                filterList[i]!!.processFilter(getImage3()),
+                                filterList[i]!!.processFilter(getImage4()),
+                            )
                         )
-                    )
+                    } else {
+                        FilterItem(
+                            filterNameList[i],
+                            mutableListOf(
+                                getImage1()!!,
+                                getImage2()!!,
+                                getImage3()!!,
+                                getImage4()!!,
+                            )
+                        )
+                    }
                 } else {
                     val aiIndex = i - filterList.size
                     FilterItem(

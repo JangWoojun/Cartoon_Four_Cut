@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.woojun.cartoon_four_cut.HomePhotoFrame
+import com.woojun.cartoon_four_cut.data.HomePhotoFrame
 import com.woojun.cartoon_four_cut.R
 import com.woojun.cartoon_four_cut.databinding.HomePhotoFrameItemBinding
 import java.io.FileNotFoundException

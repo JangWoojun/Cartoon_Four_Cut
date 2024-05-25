@@ -70,6 +70,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.cardview.widget.CardView
+        app:cardElevation="0dp"
         android:id="@+id/select_button"
         app:cardCornerRadius="12dp"
         app:cardBackgroundColor="@color/pink"

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.woojun.cartoon_four_cut.database.BitmapData
 import com.woojun.cartoon_four_cut.databinding.ActivityPhotoBinding
+import com.woojun.cartoon_four_cut.util.OnSingleClickListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,53 +71,65 @@ class PhotoActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
         setContentView(binding.root)
 
-        binding.imageFrame1.setOnClickListener {
-            selectFrame = 1
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
+        binding.imageFrame1.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                selectFrame = 1
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        })
 
-        binding.imageFrame2.setOnClickListener {
-            selectFrame = 2
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
+        binding.imageFrame2.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                selectFrame = 2
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        })
 
-        binding.imageFrame3.setOnClickListener {
-            selectFrame = 3
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
+        binding.imageFrame3.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                selectFrame = 3
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        })
 
-        binding.imageFrame4.setOnClickListener {
-            selectFrame = 4
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
+        binding.imageFrame4.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                selectFrame = 4
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        })
 
-        binding.selectButton.setOnClickListener {
-            if (imageList.size == 4) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    imageList.forEach {
-                        val bitmap = getBitmap(it.second)
-                        when (it.first) {
-                            1 -> BitmapData.setImage1(bitmap)
-                            2 -> BitmapData.setImage2(bitmap)
-                            3 -> BitmapData.setImage3(bitmap)
-                            4 -> BitmapData.setImage4(bitmap)
+        binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                if (imageList.size == 4) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        imageList.forEach {
+                            val bitmap = getBitmap(it.second)
+                            when (it.first) {
+                                1 -> BitmapData.setImage1(bitmap)
+                                2 -> BitmapData.setImage2(bitmap)
+                                3 -> BitmapData.setImage3(bitmap)
+                                4 -> BitmapData.setImage4(bitmap)
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
+                            startActivity(Intent(this@PhotoActivity, FilterActivity::class.java))
                         }
                     }
-                    withContext(Dispatchers.Main) {
-                        overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
-                        startActivity(Intent(this@PhotoActivity, FilterActivity::class.java))
-                    }
+                } else {
+                    Toast.makeText(this@PhotoActivity, "모든 사진을 선택해주세요", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(this@PhotoActivity, "모든 사진을 선택해주세요", Toast.LENGTH_SHORT).show()
             }
-        }
+        })
 
+        binding.backButton.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                finish()
+                overridePendingTransition(R.anim.anim_slide_in_from_left_fade_in, R.anim.anim_fade_out)
+            }
+        })
 
-        binding.backButton.setOnClickListener {
-            finish()
-            overridePendingTransition(R.anim.anim_slide_in_from_left_fade_in, R.anim.anim_fade_out)
-        }
     }
 
     override fun onBackPressed() {

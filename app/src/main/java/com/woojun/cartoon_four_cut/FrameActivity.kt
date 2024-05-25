@@ -3,6 +3,7 @@ package com.woojun.cartoon_four_cut
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -19,6 +20,7 @@ import com.woojun.cartoon_four_cut.database.Preferences.loadId
 import com.woojun.cartoon_four_cut.databinding.ActivityFrameBinding
 import com.woojun.cartoon_four_cut.network.RetrofitAPI
 import com.woojun.cartoon_four_cut.network.RetrofitClient
+import com.woojun.cartoon_four_cut.util.OnSingleClickListener
 import com.woojun.cartoon_four_cut.util.Utils.dpToPx
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,19 +74,20 @@ class FrameActivity : AppCompatActivity() {
                     })
                 }
 
-                binding.selectButton.setOnClickListener {
-                    val intent = Intent(this@FrameActivity, DownloadActivity::class.java)
-                    if (isAi) {
-                        generateAiImages(name) { uploadResponse ->
-                            intent.putExtra("item", DownloadItem(uploadResponse, list[frameIndex].frameResponse, true))
+                binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
+                    override fun onSingleClick(v: View?) {
+                        val intent = Intent(this@FrameActivity, DownloadActivity::class.java)
+                        if (isAi) {
+                            generateAiImages(name) { uploadResponse ->
+                                intent.putExtra("item", DownloadItem(uploadResponse, list[frameIndex].frameResponse, true))
+                                startActivity(intent)
+                            }
+                        } else {
+                            intent.putExtra("item", DownloadItem(listOf(""), list[frameIndex].frameResponse, false))
                             startActivity(intent)
                         }
-                    } else {
-                        intent.putExtra("item", DownloadItem(listOf(""), list[frameIndex].frameResponse, false))
-                        startActivity(intent)
                     }
-
-                }
+                })
 
             }
 

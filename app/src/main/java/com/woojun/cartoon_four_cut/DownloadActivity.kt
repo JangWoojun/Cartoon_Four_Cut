@@ -21,6 +21,7 @@ import com.woojun.cartoon_four_cut.database.BitmapData.getImage2
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage3
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage4
 import com.woojun.cartoon_four_cut.databinding.ActivityDownloadBinding
+import com.woojun.cartoon_four_cut.util.OnSingleClickListener
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -88,17 +89,21 @@ class DownloadActivity : AppCompatActivity() {
             .load(downloadItem.frameResponse.bottom)
             .into(bottomImage)
 
-        binding.downloadButton.setOnClickListener {
-            val mainFrame = layoutItem.findViewById<CardView>(R.id.main_frame)
-            val bitmap = viewToImage(mainFrame)
-            saveImageOnAboveAndroidQ(bitmap)
-        }
+        binding.downloadButton.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                val mainFrame = layoutItem.findViewById<CardView>(R.id.main_frame)
+                val bitmap = viewToImage(mainFrame)
+                saveImageOnAboveAndroidQ(bitmap)
+            }
+        })
 
-        binding.selectButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivity(intent)
-        }
+        binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@DownloadActivity, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
+            }
+        })
 
     }
 

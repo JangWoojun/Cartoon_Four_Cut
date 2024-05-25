@@ -3,10 +3,12 @@ package com.woojun.cartoon_four_cut
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woojun.cartoon_four_cut.adapter.HomePhotoFrameAdapter
 import com.woojun.cartoon_four_cut.databinding.ActivityMainBinding
+import com.woojun.cartoon_four_cut.util.OnSingleClickListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -19,9 +21,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.takePhotoButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, SelectModeActivity::class.java))
-        }
+        binding.takePhotoButton.setOnClickListener(object : OnSingleClickListener() {
+            override fun onSingleClick(v: View?) {
+                startActivity(Intent(this@MainActivity, SelectModeActivity::class.java))
+            }
+        })
 
         val adapter = HomePhotoFrameAdapter(mutableListOf())
 

@@ -2,6 +2,7 @@ package com.woojun.cartoon_four_cut
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +21,7 @@ import com.woojun.cartoon_four_cut.data.FilterItem
 import com.woojun.cartoon_four_cut.databinding.ActivityFilterBinding
 import com.woojun.cartoon_four_cut.network.RetrofitAPI
 import com.woojun.cartoon_four_cut.network.RetrofitClient
+import com.woojun.cartoon_four_cut.util.OnSingleClickListener
 import com.zomato.photofilters.SampleFilters
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,20 +73,23 @@ class FilterActivity : AppCompatActivity() {
                     })
                 }
 
-                binding.selectButton.setOnClickListener {
-                    val intent = Intent(this@FilterActivity, FrameActivity::class.java)
+                binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
+                    override fun onSingleClick(v: View?) {
+                        val intent = Intent(this@FilterActivity, FrameActivity::class.java)
 
-                    if (list[filterIndex].isAi) {
-                        intent.putExtra("isAi", true)
-                    } else {
-                        setImage1(list[filterIndex].images[0])
-                        setImage2(list[filterIndex].images[1])
-                        setImage3(list[filterIndex].images[2])
-                        setImage4(list[filterIndex].images[3])
+                        if (list[filterIndex].isAi) {
+                            intent.putExtra("isAi", true)
+                        } else {
+                            setImage1(list[filterIndex].images[0])
+                            setImage2(list[filterIndex].images[1])
+                            setImage3(list[filterIndex].images[2])
+                            setImage4(list[filterIndex].images[3])
+                        }
+                        intent.putExtra("name", list[filterIndex].name)
+                        startActivity(intent)
                     }
-                    intent.putExtra("name", list[filterIndex].name)
-                    startActivity(intent)
-                }
+                })
+
             }
         }
 

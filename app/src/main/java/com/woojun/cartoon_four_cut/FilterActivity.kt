@@ -74,13 +74,14 @@ class FilterActivity : AppCompatActivity() {
                     val intent = Intent(this@FilterActivity, FrameActivity::class.java)
 
                     if (list[filterIndex].isAi) {
-                        intent.putExtra("isAi", list[filterIndex].name)
+                        intent.putExtra("isAi", true)
                     } else {
                         setImage1(list[filterIndex].images[0])
                         setImage2(list[filterIndex].images[1])
                         setImage3(list[filterIndex].images[2])
                         setImage4(list[filterIndex].images[3])
                     }
+                    intent.putExtra("name", list[filterIndex].name)
 
                     overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
                     startActivity(intent)
@@ -105,10 +106,10 @@ class FilterActivity : AppCompatActivity() {
         )
         val filterNameList = mutableListOf(
             "필터 X",
-            "필터 O - Test1",
-            "필터 O - Test2",
-            "필터 O - Test3",
-            "필터 O - Test4",
+            "필터 - BlueMess",
+            "필터 - LimeStutter",
+            "필터 - StarLit",
+            "필터 - NightWhisper",
         )
 
         getFilter { aiFilterList ->

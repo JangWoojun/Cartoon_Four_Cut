@@ -2,9 +2,9 @@ package com.woojun.cartoon_four_cut
 
 import android.content.Intent
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.woojun.cartoon_four_cut.adapter.FrameViewPagerAdapter
@@ -39,6 +39,7 @@ class FrameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFrameBinding.inflate(layoutInflater)
+        overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
         setContentView(binding.root)
 
         val name = intent.getStringExtra("name")
@@ -77,12 +78,10 @@ class FrameActivity : AppCompatActivity() {
                         generateAiImages(name) { uploadResponse ->
                             intent.putExtra("item", DownloadItem(uploadResponse, list[frameIndex].frameResponse, true))
                             startActivity(intent)
-                            finishAffinity()
                         }
                     } else {
                         intent.putExtra("item", DownloadItem(listOf(""), list[frameIndex].frameResponse, false))
                         startActivity(intent)
-                        finishAffinity()
                     }
 
                 }
@@ -91,6 +90,11 @@ class FrameActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.anim_slide_in_from_left_fade_in, R.anim.anim_fade_out)
     }
 
     private fun generateAiImages(type: String, callback: (List<String>) -> Unit) {

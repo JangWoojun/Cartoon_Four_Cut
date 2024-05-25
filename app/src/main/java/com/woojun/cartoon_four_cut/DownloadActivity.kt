@@ -95,15 +95,18 @@ class DownloadActivity : AppCompatActivity() {
         }
 
         binding.selectButton.setOnClickListener {
-            startActivity(Intent(this@DownloadActivity, MainActivity::class.java))
-            finishAffinity()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
         }
 
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        overridePendingTransition(R.anim.anim_slide_in_from_left_fade_in, R.anim.anim_fade_out)
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
     }
 
     private fun saveImageOnAboveAndroidQ(bitmap: Bitmap) {

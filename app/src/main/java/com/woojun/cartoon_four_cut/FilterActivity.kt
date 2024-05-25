@@ -41,6 +41,7 @@ class FilterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFilterBinding.inflate(layoutInflater)
+        overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
         setContentView(binding.root)
 
         val isBitmapNotNull = (getImage1() != null && getImage2() != null && getImage3() != null && getImage4() != null)
@@ -82,8 +83,6 @@ class FilterActivity : AppCompatActivity() {
                         setImage4(list[filterIndex].images[3])
                     }
                     intent.putExtra("name", list[filterIndex].name)
-
-                    overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
                     startActivity(intent)
                 }
             }

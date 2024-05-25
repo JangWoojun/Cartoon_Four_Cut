@@ -41,10 +41,12 @@ class SplashActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             val authId = loadId(this@SplashActivity)
             if (authId == null) {
-                val isSuccessful = getAuthId { saveId(this@SplashActivity, it) }
-                if (!isSuccessful) {
+                val newAuthId = getAuthId()
+                if (newAuthId == null) {
                     Toast.makeText(this@SplashActivity, "초기 세팅을 실패하였습니다", Toast.LENGTH_SHORT).show()
                     return@launch
+                } else {
+                    saveId(this@SplashActivity, newAuthId)
                 }
             }
             animateLogos()
@@ -58,25 +60,16 @@ class SplashActivity : AppCompatActivity() {
         finishAffinity()
     }
 
-    private fun getAuthId(callback: (String) -> Unit): Boolean {
-        val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
-        val call: Call<AuthResponse> = retrofitAPI.getAuthId()
-
-        var isSuccessful = false
-
-        call.enqueue(object : Callback<AuthResponse> {
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                if (response.isSuccessful) {
-                    callback(response.body()!!.id)
-                    isSuccessful = true
-                }
+    private suspend fun getAuthId(): String? {
+        return withContext(Dispatchers.IO) {
+            val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
+            val response = retrofitAPI.getAuthId()
+            if (response.isSuccessful) {
+                response.body()?.id
+            } else {
+                null
             }
-
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-            }
-        })
-
-        return isSuccessful
+        }
     }
 
     private fun createFadeInAnimation(target: ImageView): ObjectAnimator {

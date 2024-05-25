@@ -14,6 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.bumptech.glide.Glide
+import com.woojun.cartoon_four_cut.data.DownloadItem
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage1
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage2
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage3
@@ -32,10 +34,9 @@ class DownloadActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.anim_slide_in_from_right_fade_in, R.anim.anim_fade_out)
         setContentView(binding.root)
 
-        val layout = intent.getIntExtra("layout", 0)
-
+        val downloadItem = intent.getParcelableExtra<DownloadItem>("item")
         val inflater = layoutInflater
-        val layoutItem = inflater.inflate(layout, null, false)
+        val layoutItem = inflater.inflate(R.layout.photo_frame_layout, null, false)
 
         binding.includedLayout.addView(layoutItem)
 
@@ -43,16 +44,49 @@ class DownloadActivity : AppCompatActivity() {
         textView.visibility = View.GONE
 
         val image1 = layoutItem.findViewById<ImageView>(R.id.image1)
-        image1.setImageBitmap(getImage1())
-
         val image2 = layoutItem.findViewById<ImageView>(R.id.image2)
-        image2.setImageBitmap(getImage2())
-
         val image3 = layoutItem.findViewById<ImageView>(R.id.image3)
-        image3.setImageBitmap(getImage3())
-
         val image4 = layoutItem.findViewById<ImageView>(R.id.image4)
-        image4.setImageBitmap(getImage4())
+
+        if (downloadItem!!.isAi) {
+            Glide.with(this@DownloadActivity)
+                .load(downloadItem.images[0])
+                .centerCrop()
+                .into(image1)
+            Glide.with(this@DownloadActivity)
+                .load(downloadItem.images[1])
+                .centerCrop()
+                .into(image2)
+            Glide.with(this@DownloadActivity)
+                .load(downloadItem.images[2])
+                .centerCrop()
+                .into(image3)
+            Glide.with(this@DownloadActivity)
+                .load(downloadItem.images[3])
+                .centerCrop()
+                .into(image4)
+        } else {
+            image1.setImageBitmap(getImage1())
+            image2.setImageBitmap(getImage2())
+            image3.setImageBitmap(getImage3())
+            image4.setImageBitmap(getImage4())
+        }
+
+        val background = layoutItem.findViewById<ImageView>(R.id.background_image)
+        val topImage = layoutItem.findViewById<ImageView>(R.id.top_image)
+        val bottomImage = layoutItem.findViewById<ImageView>(R.id.bottom_image)
+
+        Glide.with(this@DownloadActivity)
+            .load(downloadItem.frameResponse.background)
+            .into(background)
+
+        Glide.with(this@DownloadActivity)
+            .load(downloadItem.frameResponse.top)
+            .into(topImage)
+
+        Glide.with(this@DownloadActivity)
+            .load(downloadItem.frameResponse.bottom)
+            .into(bottomImage)
 
         binding.downloadButton.setOnClickListener {
             val mainFrame = layoutItem.findViewById<CardView>(R.id.main_frame)

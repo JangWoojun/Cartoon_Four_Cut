@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.woojun.cartoon_four_cut.util.Utils.dpToPx
 import com.woojun.cartoon_four_cut.data.FilterItem
 import com.woojun.cartoon_four_cut.databinding.PhotoFrameLayoutBinding
@@ -41,30 +42,26 @@ class FilterViewPagerAdapter(private val filterItemList: List<FilterItem>) : Rec
 
 
             if (filterItem.isAi) {
-                binding.filterText.text = "A.I 필터 O - ${filterItem.name}"
+                binding.filterText.text = "A.I 필터 - ${filterItem.name}"
 
                 Glide.with(binding.root.context)
                     .load(filterItem.images[0])
-                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
-                    .centerCrop()
+                    .transform(MultiTransformation(CenterCrop(), BlurTransformation(15, 3)))
                     .into(binding.image1)
 
                 Glide.with(binding.root.context)
                     .load(filterItem.images[1])
-                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
-                    .centerCrop()
+                    .transform(MultiTransformation(CenterCrop(), BlurTransformation(15, 3)))
                     .into(binding.image2)
 
                 Glide.with(binding.root.context)
                     .load(filterItem.images[2])
-                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
-                    .centerCrop()
+                    .transform(MultiTransformation(CenterCrop(), BlurTransformation(15, 3)))
                     .into(binding.image3)
 
                 Glide.with(binding.root.context)
                     .load(filterItem.images[3])
-                    .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
-                    .centerCrop()
+                    .transform(MultiTransformation(CenterCrop(), BlurTransformation(15, 3)))
                     .into(binding.image4)
             } else {
                 binding.filterText.text = "${filterItem.name}"

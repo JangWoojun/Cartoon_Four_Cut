@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             val homePhotoFrameDao = AppDatabase.getDatabase(this@MainActivity)?.homePhotoFrameItemDao()
             val list = homePhotoFrameDao!!.getHomePhotoFrameList()
 
-            val mainAdapter = HomePhotoFrameAdapter(list)
+            val mainAdapter = HomePhotoFrameAdapter(list.reversed().toMutableList())
             val defaultAdapter = DefaultHomePhotoFrameAdapter(getDefaultList())
 
             withContext(Dispatchers.Main) {

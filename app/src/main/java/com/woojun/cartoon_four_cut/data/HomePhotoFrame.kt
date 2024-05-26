@@ -1,11 +1,12 @@
 package com.woojun.cartoon_four_cut.data
 
-import android.graphics.Bitmap
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity
 data class HomePhotoFrame (
-    val image1: Bitmap,
-    val image2: Bitmap,
-    val image3: Bitmap,
-    val image4: Bitmap,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val downloadItem: DownloadItem,
     val date: String
 )

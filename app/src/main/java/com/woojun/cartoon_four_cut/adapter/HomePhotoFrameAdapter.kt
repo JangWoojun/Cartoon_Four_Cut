@@ -4,10 +4,12 @@ import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.provider.MediaStore
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,33 +54,87 @@ class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFra
         ViewHolder(binding.root) {
         fun bind(photoFrame: HomePhotoFrame) {
             if (binding.root.context != null) {
-                Glide.with(binding.root.context)
-                    .load(photoFrame.image1)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.image1)
+                if (photoFrame.downloadItem.isAi) {
+                    Glide.with(binding.root.context)
+                        .load(photoFrame.downloadItem.images[0])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image1)
 
-                Glide.with(binding.root.context)
-                    .load(photoFrame.image2)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.image2)
-                Glide.with(binding.root.context)
+                    Glide.with(binding.root.context)
+                        .load(photoFrame.downloadItem.images[1])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image2)
 
-                    .load(photoFrame.image3)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.image3)
-                Glide.with(binding.root.context)
+                    Glide.with(binding.root.context)
+                        .load(photoFrame.downloadItem.images[2])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image3)
 
-                    .load(photoFrame.image4)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.image4)
+                    Glide.with(binding.root.context)
+                        .load(photoFrame.downloadItem.images[3])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image4)
+                } else {
+                    val images = getBitmapImages(photoFrame)
+                    Glide.with(binding.root.context)
+                        .load(images[0])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image1)
+
+                    Glide.with(binding.root.context)
+                        .load(images[1])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image2)
+
+                    Glide.with(binding.root.context)
+                        .load(images[2])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image3)
+
+                    Glide.with(binding.root.context)
+                        .load(images[3])
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.image4)
+                }
+
+                binding.dateText.text = photoFrame.date
+
+                val frameResponse = photoFrame.downloadItem.frameResponse
+                Glide.with(binding.root.context)
+                    .load(frameResponse.top)
+                    .into(binding.topImage)
+                Glide.with(binding.root.context)
+                    .load(frameResponse.bottom)
+                    .into(binding.bottomImage)
+                Glide.with(binding.root.context)
+                    .load(frameResponse.background)
+                    .into(binding.backgroundImage)
             }
-            binding.dateText.text = photoFrame.date
         }
+        private fun getBitmapImages(photoFrame: HomePhotoFrame): List<Bitmap> {
+            val entity = photoFrame.downloadItem.images
+
+            val bitmapList = mutableListOf<Bitmap>()
+            val imageStrings = listOf(entity[0], entity[1], entity[2], entity[3])
+
+            for (imageString in imageStrings) {
+                val decodedString: ByteArray = Base64.decode(imageString, Base64.DEFAULT)
+                val decodedBitmap: Bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                bitmapList.add(decodedBitmap)
+            }
+            return bitmapList
+        }
+
     }
+
 
     private fun showDialog(context: Context, index: Int) {
         val dialog = Dialog(context).apply {

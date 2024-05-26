@@ -7,8 +7,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.woojun.cartoon_four_cut.adapter.HomePhotoFrameAdapter
+import com.woojun.cartoon_four_cut.database.AppDatabase
 import com.woojun.cartoon_four_cut.databinding.ActivityMainBinding
 import com.woojun.cartoon_four_cut.util.OnSingleClickListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -27,10 +32,33 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val adapter = HomePhotoFrameAdapter(mutableListOf())
+        CoroutineScope(Dispatchers.IO).launch {
+            val homePhotoFrameDao = AppDatabase.getDatabase(this@MainActivity)?.homePhotoFrameItemDao()
+            val adapter = HomePhotoFrameAdapter(homePhotoFrameDao!!.getHomePhotoFrameList())
+            HomePhotoFrameAdapter(mutableListOf())
+            withContext(Dispatchers.Main) {
+                binding.photoRecyclerView.adapter = adapter
+                binding.photoRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+            }
+        }
 
-        binding.photoRecyclerView.adapter = adapter
-        binding.photoRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            if (it.getBooleanExtra("UPDATE", false)) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val homePhotoFrameDao = AppDatabase.getDatabase(this@MainActivity)?.homePhotoFrameItemDao()
+                    val adapter = HomePhotoFrameAdapter(homePhotoFrameDao!!.getHomePhotoFrameList())
+                    HomePhotoFrameAdapter(mutableListOf())
+                    withContext(Dispatchers.Main) {
+                        binding.photoRecyclerView.adapter = adapter
+                        binding.photoRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                    }
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {

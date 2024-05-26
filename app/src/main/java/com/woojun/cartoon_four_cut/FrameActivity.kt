@@ -3,6 +3,8 @@ package com.woojun.cartoon_four_cut
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -79,7 +81,7 @@ class FrameActivity : AppCompatActivity() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(this@FrameActivity, DownloadActivity::class.java)
                         if (isAi) {
-                            generateAiImages(name) { uploadResponse ->
+                            uploadAiImages(name) { uploadResponse ->
                                 intent.putExtra("item", DownloadItem(uploadResponse, list[frameIndex].frameResponse, true))
                                 startActivity(intent)
                             }
@@ -101,16 +103,56 @@ class FrameActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.anim_slide_in_from_left_fade_in, R.anim.anim_fade_out)
     }
 
-    private fun generateAiImages(type: String, callback: (List<String>) -> Unit) {
+    private fun generateAiImages(imageNameList: List<String>, callback: (List<String>) -> Unit) {
         val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this)
         loadingDialog.show()
         setDialogText("이미지 A.I 변환 중")
+
+        val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
+        val handler = Handler(Looper.getMainLooper())
+
+        val callApi = object : Runnable {
+            override fun run() {
+                val call: Call<List<String>> = retrofitAPI.postImage(imageNameList)
+                val thisRunnable = this
+
+                call.enqueue(object : Callback<List<String>> {
+                    override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
+                        if (response.isSuccessful && response.body()!!.size == 4) {
+                            callback(response.body()!!)
+                            loadingDialog.dismiss()
+                        } else if (response.isSuccessful) {
+                            handler.postDelayed(thisRunnable, 20000)
+                        } else {
+                            setDialogText("변환 실패")
+                            loadingDialog.dismiss()
+                            Toast.makeText(this@FrameActivity, "A.I 필터 사용은\n하루 최대 10번만 가능합니다", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                        setDialogText("변환 실패")
+                        loadingDialog.dismiss()
+                        Toast.makeText(this@FrameActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+        }
+
+        handler.post(callApi)
+    }
+
+
+    private fun uploadAiImages(type: String, callback: (List<String>) -> Unit) {
+        val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this)
+        loadingDialog.show()
+        setDialogText("이미지 업로드 중")
 
         val images = listOf(getImage1()!!, getImage2()!!, getImage3()!!, getImage4()!!)
         val imageParts = createPartsFromBitmaps(images, System.currentTimeMillis().toString())
 
         val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
-        val call: Call<List<String>> = retrofitAPI.postUpload(loadId(this@FrameActivity)!!, type, imageParts)
+        val call: Call<List<String>> = retrofitAPI.putImage(loadId(this@FrameActivity)!!, type, imageParts)
 
         call.enqueue(object : Callback<List<String>> {
             override fun onResponse(
@@ -118,17 +160,20 @@ class FrameActivity : AppCompatActivity() {
                 response: Response<List<String>>
             ) {
                 if (response.isSuccessful) {
-                    setDialogText("변환 완료")
+                    setDialogText("업로드 완료")
                     loadingDialog.dismiss()
-                    callback(response.body()!!)
+
+                    generateAiImages(response.body()!!, callback)
                 } else {
-                    setDialogText("변환 실패")
+                    setDialogText("업로드 실패")
+                    loadingDialog.dismiss()
                     Toast.makeText(this@FrameActivity, "A.I 필터는 사용은\n하루 최대 10번만 가능합니다", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
                 setDialogText("변환 실패")
+                loadingDialog.dismiss()
                 Toast.makeText(this@FrameActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
             }
         })

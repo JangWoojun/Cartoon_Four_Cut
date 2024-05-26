@@ -22,7 +22,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.woojun.cartoon_four_cut.data.HomePhotoFrame
 import com.woojun.cartoon_four_cut.R
+import com.woojun.cartoon_four_cut.database.AppDatabase
 import com.woojun.cartoon_four_cut.databinding.HomePhotoFrameItemBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -135,6 +140,19 @@ class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFra
 
     }
 
+    private fun removeItem(context: Context, index: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val homePhotoFrameDao = AppDatabase.getDatabase(context)?.homePhotoFrameItemDao()
+            val list = homePhotoFrameDao!!.getHomePhotoFrameList()
+            homePhotoFrameDao.deleteHomePhotoFrame(list[index])
+
+            photoFrameList.removeAt(index)
+            withContext(Dispatchers.Main) {
+                notifyItemRemoved(index)
+            }
+        }
+    }
+
 
     private fun showDialog(context: Context, index: Int) {
         val dialog = Dialog(context).apply {
@@ -151,7 +169,7 @@ class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFra
         }
 
         deleteButton.setOnClickListener {
-            // TODO HomePhotoFrame 삭제
+            removeItem(context, index)
             dialog.dismiss()
         }
 

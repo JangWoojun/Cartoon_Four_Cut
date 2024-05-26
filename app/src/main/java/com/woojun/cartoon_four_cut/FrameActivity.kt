@@ -151,21 +151,28 @@ class FrameActivity : AppCompatActivity() {
         return parts
     }
 
-    private suspend fun generateFrameItemList(name: String, isAi: Boolean): List<FrameItem>? {
+    private fun createFrameItem(name: String, response: FrameResponse, isAi: Boolean): FrameItem {
+        return FrameItem(
+            name,
+            response,
+            mutableListOf(
+                getImage1()!!,
+                getImage2()!!,
+                getImage3()!!,
+                getImage4()!!
+            ),
+            isAi
+        )
+    }
+
+    private suspend fun generateFrameItemList(name: String, isAi: Boolean): List<FrameItem> {
         return withContext(Dispatchers.Main) {
-            getFrame()?.map {
-                FrameItem(
-                    name,
-                    it,
-                    mutableListOf(
-                        getImage1()!!,
-                        getImage2()!!,
-                        getImage3()!!,
-                        getImage4()!!,
-                    ),
-                    isAi
-                )
+            val list = mutableListOf(createFrameItem(name, FrameResponse("", "", "", "카툰네컷 기본 프레임 - 화이트"), isAi))
+            getFrame()?.forEach {
+                list.add(createFrameItem(name, it, isAi))
             }
+
+            list
         }
     }
 

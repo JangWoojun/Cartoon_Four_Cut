@@ -8,24 +8,30 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.util.Base64
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
 import com.woojun.cartoon_four_cut.data.DownloadItem
+import com.woojun.cartoon_four_cut.data.HomePhotoFrame
+import com.woojun.cartoon_four_cut.database.AppDatabase
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage1
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage2
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage3
 import com.woojun.cartoon_four_cut.database.BitmapData.getImage4
 import com.woojun.cartoon_four_cut.databinding.ActivityDownloadBinding
 import com.woojun.cartoon_four_cut.util.OnSingleClickListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class DownloadActivity : AppCompatActivity() {
@@ -38,70 +44,119 @@ class DownloadActivity : AppCompatActivity() {
 
         val downloadItem = intent.getParcelableExtra<DownloadItem>("item")
 
-        if (downloadItem!!.isAi) {
-            Glide.with(this@DownloadActivity)
-                .load(downloadItem.images[0])
-                .centerCrop()
-                .into(binding.image1)
-            Glide.with(this@DownloadActivity)
-                .load(downloadItem.images[1])
-                .centerCrop()
-                .into(binding.image2)
-            Glide.with(this@DownloadActivity)
-                .load(downloadItem.images[2])
-                .centerCrop()
-                .into(binding.image3)
-            Glide.with(this@DownloadActivity)
-                .load(downloadItem.images[3])
-                .centerCrop()
-                .into(binding.image4)
-        } else {
-            Glide.with(this@DownloadActivity)
-                .load(getImage1())
-                .centerCrop()
-                .into(binding.image1)
-            Glide.with(this@DownloadActivity)
-                .load(getImage2())
-                .centerCrop()
-                .into(binding.image2)
-            Glide.with(this@DownloadActivity)
-                .load(getImage3())
-                .centerCrop()
-                .into(binding.image3)
-            Glide.with(this@DownloadActivity)
-                .load(getImage4())
-                .centerCrop()
-                .into(binding.image4)
+        CoroutineScope(Dispatchers.IO).launch {
+            val homePhotoFrameDao = AppDatabase.getDatabase(this@DownloadActivity)?.homePhotoFrameItemDao()
+            if (downloadItem!!.isAi) {
+                homePhotoFrameDao?.insertHomePhotoFrame(generateEntity(null, downloadItem))
+            } else {
+                homePhotoFrameDao?.insertHomePhotoFrame(
+                    generateEntity(
+                        listOf(getImage1()!!, getImage2()!!, getImage3()!!, getImage4()!!),
+                        downloadItem
+                    )
+                )
+            }
+
+            withContext(Dispatchers.Main) {
+                if (downloadItem!!.isAi) {
+                    Glide.with(this@DownloadActivity)
+                        .load(downloadItem.images[0])
+                        .centerCrop()
+                        .into(binding.image1)
+                    Glide.with(this@DownloadActivity)
+                        .load(downloadItem.images[1])
+                        .centerCrop()
+                        .into(binding.image2)
+                    Glide.with(this@DownloadActivity)
+                        .load(downloadItem.images[2])
+                        .centerCrop()
+                        .into(binding.image3)
+                    Glide.with(this@DownloadActivity)
+                        .load(downloadItem.images[3])
+                        .centerCrop()
+                        .into(binding.image4)
+                } else {
+                    Glide.with(this@DownloadActivity)
+                        .load(getImage1())
+                        .centerCrop()
+                        .into(binding.image1)
+                    Glide.with(this@DownloadActivity)
+                        .load(getImage2())
+                        .centerCrop()
+                        .into(binding.image2)
+                    Glide.with(this@DownloadActivity)
+                        .load(getImage3())
+                        .centerCrop()
+                        .into(binding.image3)
+                    Glide.with(this@DownloadActivity)
+                        .load(getImage4())
+                        .centerCrop()
+                        .into(binding.image4)
+                }
+
+                Glide.with(this@DownloadActivity)
+                    .load(downloadItem.frameResponse.background)
+                    .into(binding.backgroundImage)
+
+                Glide.with(this@DownloadActivity)
+                    .load(downloadItem.frameResponse.top)
+                    .into(binding.topImage)
+
+                Glide.with(this@DownloadActivity)
+                    .load(downloadItem.frameResponse.bottom)
+                    .into(binding.bottomImage)
+
+                binding.downloadButton.setOnClickListener(object : OnSingleClickListener() {
+                    override fun onSingleClick(v: View?) {
+                        val bitmap = viewToImage(binding.mainFrame)
+                        saveImageOnAboveAndroidQ(bitmap)
+                    }
+                })
+
+                binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
+                    override fun onSingleClick(v: View?) {
+                        val intent = Intent(this@DownloadActivity, MainActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                            putExtra("UPDATE", true)
+                        }
+                        startActivity(intent)
+                    }
+                })
+
+            }
         }
 
-        Glide.with(this@DownloadActivity)
-            .load(downloadItem.frameResponse.background)
-            .into(binding.backgroundImage)
+    }
 
-        Glide.with(this@DownloadActivity)
-            .load(downloadItem.frameResponse.top)
-            .into(binding.topImage)
+    private fun bitmapToBase64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    }
 
-        Glide.with(this@DownloadActivity)
-            .load(downloadItem.frameResponse.bottom)
-            .into(binding.bottomImage)
+    private fun generateEntity(bitmapList: List<Bitmap>?, downloadItem: DownloadItem): HomePhotoFrame {
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일")
+        val dateString = currentDate.format(formatter)
 
-        binding.downloadButton.setOnClickListener(object : OnSingleClickListener() {
-            override fun onSingleClick(v: View?) {
-                val bitmap = viewToImage(binding.mainFrame)
-                saveImageOnAboveAndroidQ(bitmap)
+        return if (bitmapList != null) {
+            val imageStringList = mutableListOf<String>()
+            for (bitmap in bitmapList) {
+                val imageString = bitmapToBase64(bitmap)
+                imageStringList.add(imageString)
             }
-        })
-
-        binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
-            override fun onSingleClick(v: View?) {
-                val intent = Intent(this@DownloadActivity, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
-            }
-        })
+            HomePhotoFrame(
+                downloadItem = DownloadItem(imageStringList, downloadItem.frameResponse),
+                date = dateString
+            )
+        } else {
+            HomePhotoFrame(downloadItem = downloadItem, date = dateString)
+        }
 
     }
+
+
 
     override fun onBackPressed() {
         super.onBackPressed()

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.woojun.cartoon_four_cut.adapter.DefaultHomePhotoFrameAdapter
 import com.woojun.cartoon_four_cut.adapter.HomePhotoFrameAdapter
 import com.woojun.cartoon_four_cut.database.AppDatabase
 import com.woojun.cartoon_four_cut.databinding.ActivityMainBinding
@@ -34,10 +35,17 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val homePhotoFrameDao = AppDatabase.getDatabase(this@MainActivity)?.homePhotoFrameItemDao()
-            val adapter = HomePhotoFrameAdapter(homePhotoFrameDao!!.getHomePhotoFrameList())
-            HomePhotoFrameAdapter(mutableListOf())
+            val list = homePhotoFrameDao!!.getHomePhotoFrameList()
+
+            val mainAdapter = HomePhotoFrameAdapter(list)
+            val defaultAdapter = DefaultHomePhotoFrameAdapter(getDefaultList())
+
             withContext(Dispatchers.Main) {
-                binding.photoRecyclerView.adapter = adapter
+                if (list.size > 0) {
+                    binding.photoRecyclerView.adapter = mainAdapter
+                } else {
+                    binding.photoRecyclerView.adapter = defaultAdapter
+                }
                 binding.photoRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
             }
         }
@@ -50,15 +58,40 @@ class MainActivity : AppCompatActivity() {
             if (it.getBooleanExtra("UPDATE", false)) {
                 CoroutineScope(Dispatchers.IO).launch {
                     val homePhotoFrameDao = AppDatabase.getDatabase(this@MainActivity)?.homePhotoFrameItemDao()
-                    val adapter = HomePhotoFrameAdapter(homePhotoFrameDao!!.getHomePhotoFrameList())
-                    HomePhotoFrameAdapter(mutableListOf())
+                    val list = homePhotoFrameDao!!.getHomePhotoFrameList()
+
+                    val mainAdapter = HomePhotoFrameAdapter(list)
+                    val defaultAdapter = DefaultHomePhotoFrameAdapter(getDefaultList())
+
                     withContext(Dispatchers.Main) {
-                        binding.photoRecyclerView.adapter = adapter
+                        if (list.size > 0) {
+                            binding.photoRecyclerView.adapter = mainAdapter
+                        } else {
+                            binding.photoRecyclerView.adapter = defaultAdapter
+                        }
                         binding.photoRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
                     }
                 }
             }
         }
+    }
+
+    private fun getDefaultList(): List<List<Int>> {
+
+        return listOf(
+            listOf(
+                R.drawable.img1,
+                R.drawable.img3,
+                R.drawable.img2,
+                R.drawable.img4
+            ),
+            listOf(
+                R.drawable.img5,
+                R.drawable.img7,
+                R.drawable.img6,
+                R.drawable.img8
+            )
+        )
     }
 
     override fun onBackPressed() {

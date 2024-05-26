@@ -8,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -36,63 +37,58 @@ class DownloadActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val downloadItem = intent.getParcelableExtra<DownloadItem>("item")
-        val inflater = layoutInflater
-        val layoutItem = inflater.inflate(R.layout.photo_frame_layout, null, false)
-
-        binding.includedLayout.addView(layoutItem)
-
-        val textView = layoutItem.findViewById<TextView>(R.id.filter_text)
-        textView.visibility = View.GONE
-
-        val image1 = layoutItem.findViewById<ImageView>(R.id.image1)
-        val image2 = layoutItem.findViewById<ImageView>(R.id.image2)
-        val image3 = layoutItem.findViewById<ImageView>(R.id.image3)
-        val image4 = layoutItem.findViewById<ImageView>(R.id.image4)
 
         if (downloadItem!!.isAi) {
             Glide.with(this@DownloadActivity)
                 .load(downloadItem.images[0])
                 .centerCrop()
-                .into(image1)
+                .into(binding.image1)
             Glide.with(this@DownloadActivity)
                 .load(downloadItem.images[1])
                 .centerCrop()
-                .into(image2)
+                .into(binding.image2)
             Glide.with(this@DownloadActivity)
                 .load(downloadItem.images[2])
                 .centerCrop()
-                .into(image3)
+                .into(binding.image3)
             Glide.with(this@DownloadActivity)
                 .load(downloadItem.images[3])
                 .centerCrop()
-                .into(image4)
+                .into(binding.image4)
         } else {
-            image1.setImageBitmap(getImage1())
-            image2.setImageBitmap(getImage2())
-            image3.setImageBitmap(getImage3())
-            image4.setImageBitmap(getImage4())
+            Glide.with(this@DownloadActivity)
+                .load(getImage1())
+                .centerCrop()
+                .into(binding.image1)
+            Glide.with(this@DownloadActivity)
+                .load(getImage2())
+                .centerCrop()
+                .into(binding.image2)
+            Glide.with(this@DownloadActivity)
+                .load(getImage3())
+                .centerCrop()
+                .into(binding.image3)
+            Glide.with(this@DownloadActivity)
+                .load(getImage4())
+                .centerCrop()
+                .into(binding.image4)
         }
-
-        val background = layoutItem.findViewById<ImageView>(R.id.background_image)
-        val topImage = layoutItem.findViewById<ImageView>(R.id.top_image)
-        val bottomImage = layoutItem.findViewById<ImageView>(R.id.bottom_image)
 
         Glide.with(this@DownloadActivity)
             .load(downloadItem.frameResponse.background)
-            .into(background)
+            .into(binding.backgroundImage)
 
         Glide.with(this@DownloadActivity)
             .load(downloadItem.frameResponse.top)
-            .into(topImage)
+            .into(binding.topImage)
 
         Glide.with(this@DownloadActivity)
             .load(downloadItem.frameResponse.bottom)
-            .into(bottomImage)
+            .into(binding.bottomImage)
 
         binding.downloadButton.setOnClickListener(object : OnSingleClickListener() {
             override fun onSingleClick(v: View?) {
-                val mainFrame = layoutItem.findViewById<CardView>(R.id.main_frame)
-                val bitmap = viewToImage(mainFrame)
+                val bitmap = viewToImage(binding.mainFrame)
                 saveImageOnAboveAndroidQ(bitmap)
             }
         })

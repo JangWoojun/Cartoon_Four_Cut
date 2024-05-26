@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 class PhotoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPhotoBinding
     private var selectFrame: Int = 1
-    private val imageList: MutableList<Pair<Int, Uri>> = mutableListOf()
+    private val imageList: MutableList<Pair<Int, Uri>?> = mutableListOf(null, null, null, null)
 
     private var pickMedia = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -36,28 +36,28 @@ class PhotoActivity : AppCompatActivity() {
                             .load(it)
                             .centerCrop()
                             .into(binding.image1)
-                        imageList.add(Pair(selectFrame, uri))
+                        imageList[0] = (Pair(selectFrame, uri))
                     }
                     2 -> {
                         Glide.with(this@PhotoActivity)
                             .load(it)
                             .centerCrop()
                             .into(binding.image2)
-                        imageList.add(Pair(selectFrame, uri))
+                        imageList[1] = (Pair(selectFrame, uri))
                     }
                     3 -> {
                         Glide.with(this@PhotoActivity)
                             .load(it)
                             .centerCrop()
                             .into(binding.image3)
-                        imageList.add(Pair(selectFrame, uri))
+                        imageList[2] = (Pair(selectFrame, uri))
                     }
                     4 -> {
                         Glide.with(this@PhotoActivity)
                             .load(it)
                             .centerCrop()
                             .into(binding.image4)
-                        imageList.add(Pair(selectFrame, uri))
+                        imageList[3] = (Pair(selectFrame, uri))
                     }
                 }
             }
@@ -101,10 +101,10 @@ class PhotoActivity : AppCompatActivity() {
 
         binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
             override fun onSingleClick(v: View?) {
-                if (imageList.size == 4) {
+                if (imageList.filterNotNull().size == 4) {
                     CoroutineScope(Dispatchers.IO).launch {
                         imageList.forEach {
-                            val bitmap = getBitmap(it.second)
+                            val bitmap = getBitmap(it!!.second)
                             when (it.first) {
                                 1 -> BitmapData.setImage1(bitmap)
                                 2 -> BitmapData.setImage2(bitmap)

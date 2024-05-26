@@ -103,8 +103,7 @@ class FrameActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.anim_slide_in_from_left_fade_in, R.anim.anim_fade_out)
     }
 
-    private fun generateAiImages(imageNameList: List<String>, callback: (List<String>) -> Unit) {
-        val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this)
+    private fun generateAiImages(imageNameList: List<String>, callback: (List<String>) -> Unit, loadingDialog: android.app.Dialog, setDialogText: ((String) -> Unit)) {
         loadingDialog.show()
         setDialogText("이미지 A.I 변환 중")
 
@@ -161,9 +160,7 @@ class FrameActivity : AppCompatActivity() {
             ) {
                 if (response.isSuccessful) {
                     setDialogText("업로드 완료")
-                    loadingDialog.dismiss()
-
-                    generateAiImages(response.body()!!, callback)
+                    generateAiImages(response.body()!!, callback, loadingDialog, setDialogText)
                 } else {
                     setDialogText("업로드 실패")
                     loadingDialog.dismiss()

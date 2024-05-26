@@ -16,7 +16,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:nestedScrollingEnabled="false"
-            android:layout_marginTop="48dp"
+            android:paddingVertical="48dp"
             android:clipToPadding="false"
             android:id="@+id/photo_recycler_view"
             android:layout_width="match_parent"

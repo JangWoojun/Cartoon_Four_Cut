@@ -21,6 +21,7 @@ import com.woojun.cartoon_four_cut.data.FilterItem
 import com.woojun.cartoon_four_cut.databinding.ActivityFilterBinding
 import com.woojun.cartoon_four_cut.network.RetrofitAPI
 import com.woojun.cartoon_four_cut.network.RetrofitClient
+import com.woojun.cartoon_four_cut.util.Dialog
 import com.woojun.cartoon_four_cut.util.OnSingleClickListener
 import com.zomato.photofilters.SampleFilters
 import retrofit2.Call
@@ -161,17 +162,28 @@ class FilterActivity : AppCompatActivity() {
         val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
         val call: Call<List<String>> = retrofitAPI.getFilter()
 
+        val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this)
+        loadingDialog.show()
+        setDialogText("필터 로딩 중")
+
         call.enqueue(object : Callback<List<String>> {
             override fun onResponse(
                 call: Call<List<String>>,
                 response: Response<List<String>>
             ) {
                 if (response.isSuccessful) {
+                    setDialogText("필터 로딩 완료")
+                    loadingDialog.dismiss()
                     callback(response.body()!!)
+                } else {
+                    setDialogText("필터 로딩 실패")
+                    loadingDialog.dismiss()
                 }
             }
 
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                setDialogText("필터 로딩 실패")
+                loadingDialog.dismiss()
                 Toast.makeText(this@FilterActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
             }
         })

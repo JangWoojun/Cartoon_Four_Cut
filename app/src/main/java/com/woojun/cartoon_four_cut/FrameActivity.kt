@@ -20,6 +20,7 @@ import com.woojun.cartoon_four_cut.database.Preferences.loadId
 import com.woojun.cartoon_four_cut.databinding.ActivityFrameBinding
 import com.woojun.cartoon_four_cut.network.RetrofitAPI
 import com.woojun.cartoon_four_cut.network.RetrofitClient
+import com.woojun.cartoon_four_cut.util.Dialog
 import com.woojun.cartoon_four_cut.util.OnSingleClickListener
 import com.woojun.cartoon_four_cut.util.Utils.dpToPx
 import kotlinx.coroutines.CoroutineScope
@@ -101,6 +102,10 @@ class FrameActivity : AppCompatActivity() {
     }
 
     private fun generateAiImages(type: String, callback: (List<String>) -> Unit) {
+        val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this)
+        loadingDialog.show()
+        setDialogText("이미지 A.I 변환 중")
+
         val images = listOf(getImage1()!!, getImage2()!!, getImage3()!!, getImage4()!!)
         val imageParts = createPartsFromBitmaps(images, System.currentTimeMillis().toString())
 
@@ -113,13 +118,17 @@ class FrameActivity : AppCompatActivity() {
                 response: Response<List<String>>
             ) {
                 if (response.isSuccessful) {
+                    setDialogText("변환 완료")
+                    loadingDialog.dismiss()
                     callback(response.body()!!)
                 } else {
+                    setDialogText("변환 실패")
                     Toast.makeText(this@FrameActivity, "A.I 필터는 사용은\n하루 최대 10번만 가능합니다", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                setDialogText("변환 실패")
                 Toast.makeText(this@FrameActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
             }
         })
@@ -161,13 +170,25 @@ class FrameActivity : AppCompatActivity() {
     }
 
     private suspend fun getFrame(): List<FrameResponse>? {
+        val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this)
+        loadingDialog.show()
+        setDialogText("프레임 로딩 중")
+
         return withContext(Dispatchers.IO) {
             val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
             val response = retrofitAPI.getFrame()
             if (response.isSuccessful) {
-                response.body()
+                withContext(Dispatchers.Main) {
+                    setDialogText("프레임 로딩 완료")
+                    loadingDialog.dismiss()
+                    response.body()
+                }
             } else {
-                null
+                withContext(Dispatchers.Main) {
+                    setDialogText("프레임 로딩 실패")
+                    loadingDialog.dismiss()
+                    null
+                }
             }
         }
     }

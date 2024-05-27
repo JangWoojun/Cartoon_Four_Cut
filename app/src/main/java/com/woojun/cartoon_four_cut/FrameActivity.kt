@@ -245,6 +245,7 @@ class FrameActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
+                Toast.makeText(this@FrameActivity, "다른 프레임을 불러오지 못했습니다", Toast.LENGTH_SHORT).show()
                 setDialogText("네트워크 오류 발생")
                 loadingDialog.dismiss()
             }

@@ -118,43 +118,72 @@ class FilterActivity : AppCompatActivity() {
         )
 
         getFilter { aiFilterList ->
-            callback(List(filterList.size + aiFilterList.size) { i ->
-                if (i < filterList.size) {
-                    if (i != 0) {
-                        FilterItem(
-                            filterNameList[i],
-                            mutableListOf(
-                                filterList[i]!!.processFilter(getImage1()),
-                                filterList[i]!!.processFilter(getImage2()),
-                                filterList[i]!!.processFilter(getImage3()),
-                                filterList[i]!!.processFilter(getImage4()),
+            if (aiFilterList.isNotEmpty()) {
+                callback(List(filterList.size + aiFilterList.size) { i ->
+                    if (i < filterList.size) {
+                        if (i != 0) {
+                            FilterItem(
+                                filterNameList[i],
+                                mutableListOf(
+                                    filterList[i]!!.processFilter(getImage1()),
+                                    filterList[i]!!.processFilter(getImage2()),
+                                    filterList[i]!!.processFilter(getImage3()),
+                                    filterList[i]!!.processFilter(getImage4()),
+                                )
                             )
-                        )
+                        } else {
+                            FilterItem(
+                                filterNameList[i],
+                                mutableListOf(
+                                    getImage1()!!,
+                                    getImage2()!!,
+                                    getImage3()!!,
+                                    getImage4()!!,
+                                )
+                            )
+                        }
                     } else {
+                        val aiIndex = i - filterList.size
                         FilterItem(
-                            filterNameList[i],
+                            aiFilterList[aiIndex],
                             mutableListOf(
                                 getImage1()!!,
                                 getImage2()!!,
                                 getImage3()!!,
                                 getImage4()!!,
-                            )
+                            ),
+                            true
                         )
                     }
-                } else {
-                    val aiIndex = i - filterList.size
-                    FilterItem(
-                        aiFilterList[aiIndex],
-                        mutableListOf(
-                            getImage1()!!,
-                            getImage2()!!,
-                            getImage3()!!,
-                            getImage4()!!,
-                        ),
-                        true
-                    )
-                }
-            })
+                })
+            }
+            else {
+                callback(
+                    List(filterList.size) { i ->
+                        if (i != 0) {
+                            FilterItem(
+                                filterNameList[i],
+                                mutableListOf(
+                                    filterList[i]!!.processFilter(getImage1()),
+                                    filterList[i]!!.processFilter(getImage2()),
+                                    filterList[i]!!.processFilter(getImage3()),
+                                    filterList[i]!!.processFilter(getImage4()),
+                                )
+                            )
+                        } else {
+                            FilterItem(
+                                filterNameList[i],
+                                mutableListOf(
+                                    getImage1()!!,
+                                    getImage2()!!,
+                                    getImage3()!!,
+                                    getImage4()!!,
+                                )
+                            )
+                        }
+                    }
+                )
+            }
         }
     }
 
@@ -178,13 +207,16 @@ class FilterActivity : AppCompatActivity() {
                 } else {
                     setDialogText("필터 로딩 실패")
                     loadingDialog.dismiss()
+                    Toast.makeText(this@FilterActivity, "A.I 필터를 불러오지 못했습니다", Toast.LENGTH_SHORT).show()
+                    callback(listOf())
                 }
             }
 
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
                 setDialogText("필터 로딩 실패")
                 loadingDialog.dismiss()
-                Toast.makeText(this@FilterActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FilterActivity, "A.I 필터를 불러오지 못했습니다", Toast.LENGTH_SHORT).show()
+                callback(listOf())
             }
         })
     }

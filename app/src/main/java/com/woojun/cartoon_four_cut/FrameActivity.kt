@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -54,7 +55,7 @@ class FrameActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             val list = generateFrameItemList(name!!, isAi)
-            if (list != null && isBitmapNotNull) {
+            if (isBitmapNotNull) {
                 val adapter = FrameViewPagerAdapter(list)
                 binding.viewPager.apply {
                     this.adapter = adapter
@@ -98,8 +99,6 @@ class FrameActivity : AppCompatActivity() {
                 })
 
             }
-
-
         }
     }
 
@@ -174,7 +173,7 @@ class FrameActivity : AppCompatActivity() {
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
                 setDialogText("변환 실패")
                 loadingDialog.dismiss()
-                Toast.makeText(this@FrameActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FrameActivity, "네트워크 오류 발생", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -226,22 +225,30 @@ class FrameActivity : AppCompatActivity() {
         loadingDialog.show()
         setDialogText("프레임 로딩 중")
 
-        return withContext(Dispatchers.IO) {
-            val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
-            val response = retrofitAPI.getFrame()
-            if (response.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                    setDialogText("프레임 로딩 완료")
-                    loadingDialog.dismiss()
+        return try {
+            withContext(Dispatchers.IO) {
+                val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
+                val response = retrofitAPI.getFrame()
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        setDialogText("프레임 로딩 완료")
+                        loadingDialog.dismiss()
+                    }
                     response.body()
-                }
-            } else {
-                withContext(Dispatchers.Main) {
-                    setDialogText("프레임 로딩 실패")
-                    loadingDialog.dismiss()
+                } else {
+                    withContext(Dispatchers.Main) {
+                        setDialogText("프레임 로딩 실패")
+                        loadingDialog.dismiss()
+                    }
                     null
                 }
             }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                setDialogText("네트워크 오류 발생")
+                loadingDialog.dismiss()
+            }
+            null
         }
     }
 }

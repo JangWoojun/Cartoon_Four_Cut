@@ -115,12 +115,15 @@ class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFra
                 val frameResponse = photoFrame.downloadItem.frameResponse
                 Glide.with(binding.root.context)
                     .load(frameResponse.top)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.topImage)
                 Glide.with(binding.root.context)
-                    .load(frameResponse.bottom)
+                    .load(frameResponse.bottom)                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.bottomImage)
                 Glide.with(binding.root.context)
                     .load(frameResponse.background)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.backgroundImage)
             }
         }

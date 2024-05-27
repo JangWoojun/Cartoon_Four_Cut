@@ -79,9 +79,13 @@ class FrameActivity : AppCompatActivity() {
 
                 binding.selectButton.setOnClickListener(object : OnSingleClickListener() {
                     override fun onSingleClick(v: View?) {
+                        val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this@FrameActivity)
+                        loadingDialog.show()
+                        setDialogText("세팅 중")
+
                         val intent = Intent(this@FrameActivity, DownloadActivity::class.java)
                         if (isAi) {
-                            uploadAiImages(name) { uploadResponse ->
+                            uploadAiImages(name, loadingDialog, setDialogText) { uploadResponse ->
                                 intent.putExtra("item", DownloadItem(uploadResponse, list[frameIndex].frameResponse, true))
                                 startActivity(intent)
                             }
@@ -89,6 +93,7 @@ class FrameActivity : AppCompatActivity() {
                             intent.putExtra("item", DownloadItem(listOf(""), list[frameIndex].frameResponse, false))
                             startActivity(intent)
                         }
+
                     }
                 })
 
@@ -142,9 +147,7 @@ class FrameActivity : AppCompatActivity() {
     }
 
 
-    private fun uploadAiImages(type: String, callback: (List<String>) -> Unit) {
-        val (loadingDialog, setDialogText) = Dialog.createLoadingDialog(this)
-        loadingDialog.show()
+    private fun uploadAiImages(type: String, loadingDialog: android.app.Dialog, setDialogText: ((String) -> Unit), callback: (List<String>) -> Unit) {
         setDialogText("이미지 업로드 중")
 
         val images = listOf(getImage1()!!, getImage2()!!, getImage3()!!, getImage4()!!)

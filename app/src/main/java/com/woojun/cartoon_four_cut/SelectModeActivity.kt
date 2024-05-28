@@ -12,6 +12,7 @@ class SelectModeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectModeBinding.inflate(layoutInflater)
+        overridePendingTransition(R.anim.vertical_enter, R.anim.anim_fade_out)
         setContentView(binding.root)
 
         binding.takePhotoButton.setOnClickListener(object : OnSingleClickListener() {
@@ -28,9 +29,14 @@ class SelectModeActivity : AppCompatActivity() {
 
         binding.backButton.setOnClickListener(object : OnSingleClickListener() {
             override fun onSingleClick(v: View?) {
+                overridePendingTransition(R.anim.anim_fade_out, R.anim.vertical_exit)
                 finish()
             }
         })
 
+    }
+    override fun onBackPressed() {
+        overridePendingTransition(R.anim.anim_fade_out, R.anim.vertical_exit)
+        super.onBackPressed()
     }
 }

@@ -59,7 +59,7 @@ class FrameActivity : AppCompatActivity() {
                 val adapter = FrameViewPagerAdapter(list)
                 binding.viewPager.apply {
                     this.adapter = adapter
-                    offscreenPageLimit = 3
+                    offscreenPageLimit = 1
 
                     val pageMargin = this@FrameActivity.dpToPx(8f)
                     val offset = this@FrameActivity.dpToPx(16f)
@@ -88,10 +88,12 @@ class FrameActivity : AppCompatActivity() {
                         if (isAi) {
                             uploadAiImages(name, loadingDialog, setDialogText) { uploadResponse ->
                                 intent.putExtra("item", DownloadItem(uploadResponse, list[frameIndex].frameResponse, true))
+                                loadingDialog.dismiss()
                                 startActivity(intent)
                             }
                         } else {
                             intent.putExtra("item", DownloadItem(listOf(""), list[frameIndex].frameResponse, false))
+                            loadingDialog.dismiss()
                             startActivity(intent)
                         }
 

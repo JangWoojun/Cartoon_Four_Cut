@@ -46,19 +46,21 @@ class DownloadActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val homePhotoFrameDao = AppDatabase.getDatabase(this@DownloadActivity)?.homePhotoFrameItemDao()
-            if (downloadItem!!.isAi) {
-                homePhotoFrameDao?.insertHomePhotoFrame(generateEntity(null, downloadItem))
+            val item = if (downloadItem!!.isAi) {
+                generateEntity(null, downloadItem)
             } else {
-                homePhotoFrameDao?.insertHomePhotoFrame(
-                    generateEntity(
-                        listOf(getImage1()!!, getImage2()!!, getImage3()!!, getImage4()!!),
-                        downloadItem
-                    )
-                )
+                generateEntity(listOf(getImage1()!!, getImage2()!!, getImage3()!!, getImage4()!!), downloadItem)
             }
 
+            val list = homePhotoFrameDao?.getHomePhotoFrameList()
+            if (list != null && list.size > 4) {
+                homePhotoFrameDao.deleteHomePhotoFrame(list.removeFirst())
+            }
+            homePhotoFrameDao?.insertHomePhotoFrame(item)
+
+
             withContext(Dispatchers.Main) {
-                if (downloadItem!!.isAi) {
+                if (downloadItem.isAi) {
                     Glide.with(this@DownloadActivity)
                         .load(downloadItem.images[0])
                         .centerCrop()

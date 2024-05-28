@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.woojun.cartoon_four_cut.database.Preferences.loadId
 import com.woojun.cartoon_four_cut.database.Preferences.saveId
-import com.woojun.cartoon_four_cut.data.AuthResponse
 import com.woojun.cartoon_four_cut.databinding.ActivitySplashBinding
 import com.woojun.cartoon_four_cut.network.RetrofitAPI
 import com.woojun.cartoon_four_cut.network.RetrofitClient
@@ -17,9 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SplashActivity : AppCompatActivity() {
@@ -61,14 +57,18 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private suspend fun getAuthId(): String? {
-        return withContext(Dispatchers.IO) {
-            val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
-            val response = retrofitAPI.getAuthId()
-            if (response.isSuccessful) {
-                response.body()?.id
-            } else {
-                null
+        return try {
+            withContext(Dispatchers.IO) {
+                val retrofitAPI = RetrofitClient.getInstance().create(RetrofitAPI::class.java)
+                val response = retrofitAPI.getAuthId()
+                if (response.isSuccessful) {
+                    response.body()?.id
+                } else {
+                    null
+                }
             }
+        } catch (e: Exception) {
+            null
         }
     }
 

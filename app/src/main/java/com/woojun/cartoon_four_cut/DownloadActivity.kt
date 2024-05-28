@@ -120,6 +120,7 @@ class DownloadActivity : AppCompatActivity() {
                             putExtra("UPDATE", true)
                         }
                         startActivity(intent)
+                        overridePendingTransition(R.anim.anim_fade_out, R.anim.vertical_exit)
                     }
                 })
 
@@ -165,6 +166,7 @@ class DownloadActivity : AppCompatActivity() {
             putExtra("UPDATE", true)
         }
         startActivity(intent)
+        overridePendingTransition(R.anim.anim_fade_out, R.anim.vertical_exit)
     }
 
     private fun saveImageOnAboveAndroidQ(bitmap: Bitmap) {

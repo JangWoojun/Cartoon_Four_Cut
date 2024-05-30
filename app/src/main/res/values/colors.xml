@@ -12,4 +12,10 @@
     <color name="yellow">#FFE812</color>
     <color name="pink">#FF4689</color>
     <color name="red">#F32A2A</color>
+
+    <color name="ucrop_color_toolbar_widget">@color/white</color>
+    <color name="ucrop_color_widget_active">@color/white</color>
+    <color name="ucrop_color_active_controls_color">@color/pink</color>
+    <color name="ucrop_color_widget_rotate_mid_line">@color/black</color>
+    <color name="ucrop_color_widget_background">@color/black</color>
 </resources>

@@ -17,12 +17,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            app:tint="@color/pink"
             android:id="@+id/logo1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/logo_1" />
 
         <ImageView
+            app:tint="@color/pink"
             android:id="@+id/logo2"
             android:layout_marginStart="4.82dp"
             android:layout_width="wrap_content"
@@ -30,6 +32,7 @@
             android:src="@drawable/logo_2" />
 
         <ImageView
+            app:tint="@color/pink"
             android:id="@+id/logo3"
             android:layout_marginStart="6.51dp"
             android:layout_width="wrap_content"
@@ -37,6 +40,7 @@
             android:src="@drawable/logo_3" />
 
         <ImageView
+            app:tint="@color/pink"
             android:id="@+id/logo4"
             android:layout_marginStart="9.1dp"
             android:layout_width="wrap_content"

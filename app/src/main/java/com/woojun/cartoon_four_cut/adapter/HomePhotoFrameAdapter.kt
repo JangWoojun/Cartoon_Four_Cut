@@ -4,12 +4,9 @@ import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.provider.MediaStore
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +16,13 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.woojun.cartoon_four_cut.data.HomePhotoFrame
 import com.woojun.cartoon_four_cut.R
 import com.woojun.cartoon_four_cut.database.AppDatabase
 import com.woojun.cartoon_four_cut.databinding.HomePhotoFrameItemBinding
+import com.woojun.cartoon_four_cut.util.OnSingleClickListener
+import com.woojun.cartoon_four_cut.util.Utils
+import com.woojun.cartoon_four_cut.util.VisibilityControlListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,86 +58,12 @@ class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFra
         ViewHolder(binding.root) {
         fun bind(photoFrame: HomePhotoFrame) {
             if (binding.root.context != null) {
-                if (photoFrame.downloadItem.isAi) {
-                    Glide.with(binding.root.context)
-                        .load(photoFrame.downloadItem.images[0])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image1)
-
-                    Glide.with(binding.root.context)
-                        .load(photoFrame.downloadItem.images[1])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image2)
-
-                    Glide.with(binding.root.context)
-                        .load(photoFrame.downloadItem.images[2])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image3)
-
-                    Glide.with(binding.root.context)
-                        .load(photoFrame.downloadItem.images[3])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image4)
-                } else {
-                    val images = getBitmapImages(photoFrame)
-                    Glide.with(binding.root.context)
-                        .load(images[0])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image1)
-
-                    Glide.with(binding.root.context)
-                        .load(images[1])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image2)
-
-                    Glide.with(binding.root.context)
-                        .load(images[2])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image3)
-
-                    Glide.with(binding.root.context)
-                        .load(images[3])
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.image4)
-                }
+                Glide.with(binding.root.context)
+                    .load(photoFrame.imagePath)
+                    .into(binding.imageView)
 
                 binding.dateText.text = photoFrame.date
-
-                val frameResponse = photoFrame.downloadItem.frameResponse
-                Glide.with(binding.root.context)
-                    .load(frameResponse.top)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.topImage)
-                Glide.with(binding.root.context)
-                    .load(frameResponse.bottom)                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.bottomImage)
-                Glide.with(binding.root.context)
-                    .load(frameResponse.background)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.backgroundImage)
             }
-        }
-        private fun getBitmapImages(photoFrame: HomePhotoFrame): List<Bitmap> {
-            val entity = photoFrame.downloadItem.images
-
-            val bitmapList = mutableListOf<Bitmap>()
-            val imageStrings = listOf(entity[0], entity[1], entity[2], entity[3])
-
-            for (imageString in imageStrings) {
-                val decodedString: ByteArray = Base64.decode(imageString, Base64.DEFAULT)
-                val decodedBitmap: Bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-                bitmapList.add(decodedBitmap)
-            }
-            return bitmapList
         }
 
     }
@@ -177,15 +102,6 @@ class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFra
         }
 
         dialog.show()
-    }
-
-    private fun viewToImage(view: View): Bitmap {
-        val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(returnedBitmap)
-        val bgDrawable = view.background
-        if (bgDrawable != null) bgDrawable.draw(canvas) else canvas.drawColor(Color.WHITE)
-        view.draw(canvas)
-        return returnedBitmap
     }
 
     private fun saveImageOnAboveAndroidQ(context: Context, bitmap: Bitmap) {

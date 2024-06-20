@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class HomePhotoFrame (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val downloadItem: DownloadItem,
+    val imagePath: String,
     val date: String
 )

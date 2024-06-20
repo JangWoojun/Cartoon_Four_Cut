@@ -142,9 +142,9 @@ class CameraActivity : AppCompatActivity() {
 
     private fun cropBitmap(context: Context, bitmap: Bitmap): Bitmap {
         val bitmapWidth = bitmap.width
-        val startY = context.dpToPx(146.5f).toInt()
+        val topMarginInPx = context.dpToPx(83f).toInt()
 
-        return Bitmap.createBitmap(bitmap, 0, startY, bitmapWidth, bitmapWidth)
+        return Bitmap.createBitmap(bitmap, 0, topMarginInPx, bitmapWidth, bitmapWidth)
     }
 
 }

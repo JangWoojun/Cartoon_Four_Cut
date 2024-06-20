@@ -31,18 +31,24 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
-class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFrame>): RecyclerView.Adapter<HomePhotoFrameAdapter.HomePhotoFrameViewHolder>() {
+class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFrame>, private val visibilityControlListener: VisibilityControlListener): RecyclerView.Adapter<HomePhotoFrameAdapter.HomePhotoFrameViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomePhotoFrameViewHolder {
         val binding = HomePhotoFrameItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomePhotoFrameViewHolder(binding).also { handler->
-            binding.deleteButton.setOnClickListener {
-                showDialog(binding.root.context, handler.position)
-            }
-            binding.downloadButton.setOnClickListener {
-                val bitmap = viewToImage(binding.mainFrame)
-                saveImageOnAboveAndroidQ(binding.root.context, bitmap)
-            }
+
+            binding.deleteButton.setOnClickListener(object : OnSingleClickListener() {
+                override fun onSingleClick(v: View?) {
+                    showDialog(binding.root.context, handler.position)
+                }
+            })
+
+            binding.downloadButton.setOnClickListener(object : OnSingleClickListener() {
+                override fun onSingleClick(v: View?) {
+                    val bitmap = Utils.loadImageFromFilePath(photoFrameList[handler.position].imagePath)
+                    bitmap?.let { saveImageOnAboveAndroidQ(binding.root.context, it) }
+                }
+            })
         }
     }
 
@@ -97,6 +103,11 @@ class HomePhotoFrameAdapter(private val photoFrameList: MutableList<HomePhotoFra
         }
 
         deleteButton.setOnClickListener {
+            if (photoFrameList.size == 1) {
+                visibilityControlListener.onVisibilityChange(true)
+            } else {
+                visibilityControlListener.onVisibilityChange(false)
+            }
             removeItem(context, index)
             dialog.dismiss()
         }

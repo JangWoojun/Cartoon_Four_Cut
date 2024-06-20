@@ -29,10 +29,10 @@
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="H, 345:412"
         app:cardBackgroundColor="@color/gray_20"
+        app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:strokeColor="@color/gray_30">
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -63,8 +63,7 @@
                 app:layout_constraintDimensionRatio="W, 1:1"
                 app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:strokeColor="@color/gray_30">
+                app:layout_constraintTop_toTopOf="parent">
 
 
                 <ImageView
@@ -86,8 +85,7 @@
                 app:layout_constraintDimensionRatio="W, 1:1"
                 app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_frame_1"
-                app:strokeColor="@color/gray_30">
+                app:layout_constraintTop_toBottomOf="@+id/image_frame_1">
 
 
                 <ImageView
@@ -109,8 +107,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/image_frame_4"
                 app:layout_constraintDimensionRatio="W, 1:1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout"
-                app:strokeColor="@color/gray_30">
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout">
 
 
                 <ImageView
@@ -132,8 +129,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="W, 1:1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout"
-                app:strokeColor="@color/gray_30">
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout">
 
 
                 <ImageView
